@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.device.SbRssiMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.device.SbRssi" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="devId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="rssi" property="rssi" jdbcType="VARCHAR" />
+    <result column="at" property="at" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dev_id, title, rssi, at, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sb_rssi
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sb_rssi
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.device.SbRssi" >
+    insert into sb_rssi ( dev_id, title, 
+      rssi, at, gmt_create
+      )
+    values (#{id,jdbcType=BIGINT}, #{devId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{rssi,jdbcType=VARCHAR}, #{at,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.device.SbRssi" >
+    insert into sb_rssi
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="rssi != null" >
+        rssi,
+      </if>
+      <if test="at != null" >
+        at,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="rssi != null" >
+        #{rssi,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.device.SbRssi" >
+    update sb_rssi
+    <set >
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="rssi != null" >
+        rssi = #{rssi,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        at = #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.device.SbRssi" >
+    update sb_rssi
+    set dev_id = #{devId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      rssi = #{rssi,jdbcType=VARCHAR},
+      at = #{at,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

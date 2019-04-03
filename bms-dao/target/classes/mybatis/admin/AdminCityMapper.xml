@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.admin.AdminCityMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.admin.AdminCity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userid" property="userid" jdbcType="BIGINT" />
+    <result column="usercity" property="usercity" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="update_oper_id" property="updateOperId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid userId, usercity, gmt_create, gmt_modified, update_oper_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin_city
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from admin_city
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    insert into admin_city ( userid, usercity, 
+      gmt_create, gmt_modified, update_oper_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{usercity,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{updateOperId,jdbcType=BIGINT}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    insert into admin_city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="usercity != null" >
+        usercity,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="usercity != null" >
+        #{usercity,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateOperId != null" >
+        #{updateOperId,jdbcType=BIGINT},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    update admin_city
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="usercity != null" >
+        usercity = #{usercity,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    update admin_city
+    set userid = #{userid,jdbcType=BIGINT},
+      usercity = #{usercity,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      update_oper_id = #{updateOperId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+
+  <select id="findAdminCity" resultType="com.onemile.bms.entity.admin.AdminCity" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    admin_city
+    <where>
+      and userid = #{userid,jdbcType=VARCHAR}
+      and usercity=#{usercity,jdbcType=VARCHAR}
+    </where>
+  </select>
+
+
+  <delete id="deleteAdminCityByUserIdAndCity" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    delete from admin_city
+    where userid = #{userid,jdbcType=VARCHAR}
+      and usercity=#{usercity,jdbcType=VARCHAR}
+  </delete>
+
+
+  <select id="listAdminCityByUserId" resultType="com.onemile.bms.entity.admin.AdminCity" parameterType="com.onemile.bms.entity.admin.AdminCity" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+    admin_city
+    <where>
+      and userid = #{userid,jdbcType=VARCHAR}
+    </where>
+  </select>
+
+
+
+</mapper>

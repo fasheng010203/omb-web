@@ -1,0 +1,245 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<style type="text/css">
+    #allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=t8Vs8PBXqsTqRZ3nrrsHP24A1waZGBFt"></script>
+
+
+<@defaultLayout.layout>
+
+<div class="main-content-inner">
+
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+
+                <div class="row">
+                    <div class="col-sm-12 infobox-container">
+
+
+                        <div class="infobox infobox-blue2">
+
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-flask"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">${bNormalWorkPersent!''}</span>
+                                <div class="infobox-content">正常工作箱子占比</div>
+                            </div>
+
+                        </div>
+
+                        <div class="infobox infobox-green">
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-comments"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">${bNeedChargePersent!''}</span>
+                                <div class="infobox-content">待充电占比</div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="infobox infobox-blue">
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-list"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">${fixPersent!''} </span>
+                                <div class="infobox-content">待维修占比</div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="infobox infobox-pink">
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-shopping-cart"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">${bNoWorkPersent!''} </span>
+                                <div class="infobox-content">增氧泵不工作占比</div>
+                            </div>
+
+                        </div>
+
+                        <div class="infobox infobox-red">
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-flask"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">${lowBatPersent!''}</span>
+                                <div class="infobox-content">超低电量占比</div>
+                            </div>
+                        </div>
+
+                        <div class="infobox infobox-orange2">
+
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-flask"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">7</span>
+                                <div class="infobox-content">正常开箱占比</div>
+                            </div>
+
+
+
+                            <!--<div class="infobox-chart">-->
+                                <!--<span class="sparkline" data-values="196,128,202,177,154,94,100,170,224"></span>-->
+                            <!--</div>-->
+
+                            <!--<div class="infobox-data">-->
+                                <!--<span class="infobox-data-number">6,251</span>-->
+                                <!--<div class="infobox-content">pageviews</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="badge badge-success">-->
+                                <!--7.2%-->
+                                <!--<i class="ace-icon fa fa-arrow-up"></i>-->
+                            <!--</div>-->
+                        </div>
+
+
+
+                        <div class="infobox infobox-blue2">
+
+                            <div class="infobox-icon">
+                                <i class="ace-icon fa fa-flask"></i>
+                            </div>
+
+                            <div class="infobox-data">
+                                <span class="infobox-data-number">7</span>
+                                <div class="infobox-content">超时开箱占比</div>
+                            </div>
+
+                            <!--<div class="infobox-progress">-->
+                            <!--<div class="easy-pie-chart percentage" data-percent="42" data-size="46">-->
+                            <!--<span class="percent">42</span>%-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="infobox-data">-->
+                            <!--<span class="infobox-text">traffic used</span>-->
+
+                            <!--<div class="infobox-content">-->
+                            <!--<span class="bigger-110">~</span>-->
+                            <!--58GB remaining-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+
+                        <div class="space-6"></div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Map box -->
+                        <div class="box box-solid bg-light-blue-gradient">
+                            <!-- box header -->
+                            <div class="box-header">
+                            </div>
+                            <div id="allmap"></div>
+                           </div>
+                    </div>
+
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div>
+
+
+
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+
+
+    //百度地图API功能
+    function loadJScript() {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "http://api.map.baidu.com/api?v=2.0&ak=t8Vs8PBXqsTqRZ3nrrsHP24A1waZGBFt&callback=init";
+        document.body.appendChild(script);
+    }
+    function init() {
+        var map = new BMap.Map("allmap");            // 创建Map实例
+        var point = new BMap.Point(121.474, 31.234); // 创建点坐标
+        map.centerAndZoom(point,6.5);
+        map.enableScrollWheelZoom();                //启用滚轮放大缩小
+
+
+    <#list sbloclist as obj>
+        var lat= Math.abs('${obj.lat}');
+        var lon= Math.abs('${obj.lon}');
+
+
+        var point = new BMap.Point(lon,lat);
+            var marker = new BMap.Marker(point);
+            map.addOverlay(marker);
+    </#list>
+
+    }
+
+    // 编写自定义函数,创建标注
+    function addMarker(point){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+    }
+
+    window.onload = loadJScript;  //异步加载地图
+
+
+
+    // // 百度地图API功能
+    // var map = new BMap.Map("allmap");    // 创建Map实例
+    // map.centerAndZoom(new BMap.Point(121.474, 31.234), 10);  // 初始化地图,设置中心点坐标和地图级别
+    // //添加地图类型控件
+    // map.addControl(new BMap.MapTypeControl({
+    //     mapTypes:[
+    //         BMAP_NORMAL_MAP,
+    //         BMAP_HYBRID_MAP
+    //     ]}));
+    // map.setCurrentCity("上海");          // 设置地图显示的城市 此项是必须设置的
+    // map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    //
+    //
+    // // 编写自定义函数,创建标注
+    // function addMarker(){
+    //     var marker = new BMap.Point(39.909,116.417);
+    //     map.addOverlay(marker);
+    // }
+    //
+    // // 编写自定义函数,创建标注
+    // function addMyMarker(point){
+    //     //创建小狐狸
+    //     //var pt = new BMap.Point(116.417, 39.909);
+    //     var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/fox.gif", new BMap.Size(300,157));
+    //     var marker2 = new BMap.Marker(point,{icon:myIcon});  // 创建标注
+    //     map.addOverlay(marker2);              // 将标注添加到地图中
+    // };
+    // // 随机向地图添加25个标注y
+
+
+
+
+
+
+</script>
+
+</@defaultLayout.layout>

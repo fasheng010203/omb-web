@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.operate.BannerMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.operate.Banner" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="scene" property="scene" jdbcType="TINYINT" />
+    <result column="pic_url" property="picUrl" jdbcType="VARCHAR" />
+    <result column="link_url" property="linkUrl" jdbcType="VARCHAR" />
+    <result column="sort_no" property="sortNo" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="effect_date" property="effectDate" jdbcType="DATE" />
+    <result column="expire_date" property="expireDate" jdbcType="DATE" />
+    <result column="create_oper_id" property="createOperId" jdbcType="BIGINT" />
+    <result column="create_oper_name" property="createOperName" jdbcType="VARCHAR" />
+    <result column="update_oper_id" property="updateOperId" jdbcType="BIGINT" />
+    <result column="update_oper_name" property="updateOperName" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, scene, pic_url, link_url, sort_no, status, effect_date, expire_date, create_oper_id, 
+    create_oper_name, update_oper_id, update_oper_name, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from banner
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from banner
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.operate.Banner" >
+    insert into banner ( name, scene, 
+      pic_url, link_url, sort_no, 
+      status, effect_date, expire_date, 
+      create_oper_id, create_oper_name, update_oper_id, 
+      update_oper_name, gmt_create, gmt_modified
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{scene,jdbcType=TINYINT}, 
+      #{picUrl,jdbcType=VARCHAR}, #{linkUrl,jdbcType=VARCHAR}, #{sortNo,jdbcType=INTEGER}, 
+      #{status,jdbcType=TINYINT}, #{effectDate,jdbcType=DATE}, #{expireDate,jdbcType=DATE}, 
+      #{createOperId,jdbcType=BIGINT}, #{createOperName,jdbcType=VARCHAR}, #{updateOperId,jdbcType=BIGINT}, 
+      #{updateOperName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.operate.Banner" >
+    insert into banner
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="scene != null" >
+        scene,
+      </if>
+      <if test="picUrl != null" >
+        pic_url,
+      </if>
+      <if test="linkUrl != null" >
+        link_url,
+      </if>
+      <if test="sortNo != null" >
+        sort_no,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="effectDate != null" >
+        effect_date,
+      </if>
+      <if test="expireDate != null" >
+        expire_date,
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id,
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name,
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id,
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="scene != null" >
+        #{scene,jdbcType=TINYINT},
+      </if>
+      <if test="picUrl != null" >
+        #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null" >
+        #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="effectDate != null" >
+        #{effectDate,jdbcType=DATE},
+      </if>
+      <if test="expireDate != null" >
+        #{expireDate,jdbcType=DATE},
+      </if>
+      <if test="createOperId != null" >
+        #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.operate.Banner" >
+    update banner
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="scene != null" >
+        scene = #{scene,jdbcType=TINYINT},
+      </if>
+      <if test="picUrl != null" >
+        pic_url = #{picUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl != null" >
+        link_url = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNo != null" >
+        sort_no = #{sortNo,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="effectDate != null" >
+        effect_date = #{effectDate,jdbcType=DATE},
+      </if>
+      <if test="expireDate != null" >
+        expire_date = #{expireDate,jdbcType=DATE},
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id = #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.operate.Banner" >
+    update banner
+    set name = #{name,jdbcType=VARCHAR},
+      scene = #{scene,jdbcType=TINYINT},
+      pic_url = #{picUrl,jdbcType=VARCHAR},
+      link_url = #{linkUrl,jdbcType=VARCHAR},
+      sort_no = #{sortNo,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      effect_date = #{effectDate,jdbcType=DATE},
+      expire_date = #{expireDate,jdbcType=DATE},
+      create_oper_id = #{createOperId,jdbcType=BIGINT},
+      create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <select id="listPage" resultType="com.onemile.bms.pojo.vo.zxshare.operate.BannerVO">
+    SELECT
+	id id,
+	NAME NAME,
+	scene scene,
+	pic_url picUrl,
+	link_url linkUrl,
+	sort_no sortNo,
+	STATUS status,
+	if(status=0,10,status) s_status,
+	effect_date effectDate,
+	expire_date expireDate,
+	create_oper_id createOperId,
+	create_oper_name createOperName,
+	update_oper_id updateOperId,
+	update_oper_name updateOperName,
+	gmt_create gmtCreate,
+	gmt_modified gmtModified
+FROM
+	banner
+    <where>
+      <if test="id != null and id!=''" >
+        and id = #{id}
+      </if>
+      <if test="name != null and name!=''">
+        and name like concat('%', #{name}, '%')
+      </if>
+      <if test="status != null and status!=''">
+        and  status= #{status}
+      </if>
+    </where>
+    order by s_status desc ,gmt_modified desc
+  </select>
+
+
+
+  <select id="getByBannerId" resultType="com.onemile.bms.pojo.vo.zxshare.operate.BannerVO">
+    SELECT
+    id id,
+    NAME NAME,
+    scene scene,
+    pic_url picUrl,
+    link_url linkUrl,
+    sort_no sortNo,
+    STATUS status,
+    if(status=0,10,status) s_status,
+    effect_date effectDate,
+    expire_date expireDate,
+    create_oper_id createOperId,
+    create_oper_name createOperName,
+    update_oper_id updateOperId,
+    update_oper_name updateOperName,
+    gmt_create gmtCreate,
+    gmt_modified gmtModified
+    FROM
+    banner
+    <where>
+      <if test="id != null and id!=''" >
+        and id = #{id}
+      </if>
+    </where>
+  </select>
+</mapper>

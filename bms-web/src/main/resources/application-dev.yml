@@ -1,0 +1,43 @@
+#redis配置
+redis:
+  ip: 127.0.0.1
+  port: 6379
+  maxTotal: 25
+  maxIdle: 50
+  maxWaitMillis: 5000
+  maxTimeout: 3000
+
+#bms数据库连接
+bms:
+  url: jdbc:mysql://localhost:3306/onemile?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+  username: root
+  password: 123456
+
+#shiro 配置
+shiro:
+  sessionTimeout: 3000 # 登录超时时间 单位：秒
+  cachedTimeout: 60 # 权限缓存超时时间 单位：秒
+  cookieMaxAge: 2592000 #记住我的最大时间 单位：秒
+
+#excel ftl 模板存储物理路径
+excel:
+  ftlPath: E:\hzx_work_002\idea\work\lms\trunk\lms-web\src\main\webapp\templates\excel
+  csvPath: /var/tem/uploads/
+
+
+#qrcode 存储物理路径
+qrcode:
+  filePath: /var/tem/deviceqr/
+
+
+  #短信和验证码接口
+sms:
+  checkCodeUrl: http://192.168.2.11:7080/checkcode/getCheckCode.html
+  verifyUrl: http://192.168.2.11:7080/checkcode/verifyCheckCode.html
+  sendTempUrl: http://192.168.2.11:7080/sms/sendTemp.html
+  sendUrl: http://192.168.2.11:7080/sms/send.html
+  pushAliasUrl: http://192.168.2.11:7080/push/pushAlias.html
+  pushAliasTempUrl: http://192.168.2.11:7080/push/pushAliasTemp.html
+  pushAllUrl: http://192.168.2.11:7080/push/pushAll.html
+
+

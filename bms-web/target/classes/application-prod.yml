@@ -1,0 +1,29 @@
+#redis配置
+redis:
+  ip: 192.168.2.11
+  port: 6379
+  maxTotal: 25
+  maxIdle: 50
+  maxWaitMillis: 5000
+  maxTimeout: 3000
+#task数据库连接
+lms:
+  url: jdbc:mysql://192.168.2.11:3306/lms?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+  username: root
+  password: 123456
+
+#lss_core数据库连接
+lsscore:
+  url: jdbc:mysql://192.168.2.11:3306/lss_core?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+  username: root
+  password: 123456
+
+#shiro 配置
+shiro:
+  sessionTimeout: 1800 # 登录超时时间 单位：秒
+  cachedTimeout: 600 # 权限缓存超时时间 单位：秒
+  cookieMaxAge: 2592000 #记住我的最大时间 单位：秒
+
+#excel ftl 模板存储物理路径
+excel:
+  ftlPath: /Users/Eric/code/onemile/code/lms/lms-web/src/main/webapp/templates/excel

@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.company.UserVerifyMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.company.UserVerify" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="verify_type" property="verifyType" jdbcType="TINYINT" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="org_type" property="orgType" jdbcType="VARCHAR" />
+    <result column="idcard_no" property="idcardNo" jdbcType="VARCHAR" />
+    <result column="idcard_front_url" property="idcardFrontUrl" jdbcType="VARCHAR" />
+    <result column="idcard_back_url" property="idcardBackUrl" jdbcType="VARCHAR" />
+    <result column="licence_url" property="licenceUrl" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+      <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="link_tel" property="linkTel" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="auditing_user_id" property="auditingUserId" jdbcType="BIGINT" />
+    <result column="auditing_user_name" property="auditingUserName" jdbcType="VARCHAR" />
+    <result column="auditing_time" property="auditingTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, verify_type, real_name, org_type, idcard_no, idcard_front_url, idcard_back_url, 
+    licence_url, province, city, district, address, link_tel, status, remark, gmt_create, 
+    gmt_modified, auditing_user_id, auditing_user_name, auditing_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_verify
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_verify
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.company.UserVerify" >
+    insert into user_verify ( user_id, verify_type, 
+      real_name, org_type, idcard_no, 
+      idcard_front_url, idcard_back_url, licence_url, 
+      province, city, district, 
+      address, link_tel, status, 
+      remark, gmt_create, gmt_modified, 
+      auditing_user_id, auditing_user_name, auditing_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{verifyType,jdbcType=TINYINT}, 
+      #{realName,jdbcType=VARCHAR}, #{orgType,jdbcType=VARCHAR}, #{idcardNo,jdbcType=VARCHAR}, 
+      #{idcardFrontUrl,jdbcType=VARCHAR}, #{idcardBackUrl,jdbcType=VARCHAR}, #{licenceUrl,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{linkTel,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, 
+      #{remark,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{auditingUserId,jdbcType=BIGINT}, #{auditingUserName,jdbcType=VARCHAR}, #{auditingTime,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.company.UserVerify" >
+    insert into user_verify
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="verifyType != null" >
+        verify_type,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="orgType != null" >
+        org_type,
+      </if>
+      <if test="idcardNo != null" >
+        idcard_no,
+      </if>
+      <if test="idcardFrontUrl != null" >
+        idcard_front_url,
+      </if>
+      <if test="idcardBackUrl != null" >
+        idcard_back_url,
+      </if>
+      <if test="licenceUrl != null" >
+        licence_url,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="linkTel != null" >
+        link_tel,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+      <if test="auditingUserId != null" >
+        auditing_user_id,
+      </if>
+      <if test="auditingUserName != null" >
+        auditing_user_name,
+      </if>
+      <if test="auditingTime != null" >
+        auditing_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="verifyType != null" >
+        #{verifyType,jdbcType=TINYINT},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null" >
+        #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardNo != null" >
+        #{idcardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardFrontUrl != null" >
+        #{idcardFrontUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardBackUrl != null" >
+        #{idcardBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceUrl != null" >
+        #{licenceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkTel != null" >
+        #{linkTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditingUserId != null" >
+        #{auditingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="auditingUserName != null" >
+        #{auditingUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditingTime != null" >
+        #{auditingTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.company.UserVerify" >
+    update user_verify
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="verifyType != null" >
+        verify_type = #{verifyType,jdbcType=TINYINT},
+      </if>
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null" >
+        org_type = #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardNo != null" >
+        idcard_no = #{idcardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardFrontUrl != null" >
+        idcard_front_url = #{idcardFrontUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="idcardBackUrl != null" >
+        idcard_back_url = #{idcardBackUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="licenceUrl != null" >
+        licence_url = #{licenceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkTel != null" >
+        link_tel = #{linkTel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditingUserId != null" >
+        auditing_user_id = #{auditingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="auditingUserName != null" >
+        auditing_user_name = #{auditingUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditingTime != null" >
+        auditing_time = #{auditingTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.company.UserVerify" >
+    update user_verify
+    set user_id = #{userId,jdbcType=BIGINT},
+      verify_type = #{verifyType,jdbcType=TINYINT},
+      real_name = #{realName,jdbcType=VARCHAR},
+      org_type = #{orgType,jdbcType=VARCHAR},
+      idcard_no = #{idcardNo,jdbcType=VARCHAR},
+      idcard_front_url = #{idcardFrontUrl,jdbcType=VARCHAR},
+      idcard_back_url = #{idcardBackUrl,jdbcType=VARCHAR},
+      licence_url = #{licenceUrl,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      link_tel = #{linkTel,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      auditing_user_id = #{auditingUserId,jdbcType=BIGINT},
+      auditing_user_name = #{auditingUserName,jdbcType=VARCHAR},
+      auditing_time = #{auditingTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <select id="listPage" resultType="com.onemile.bms.pojo.vo.zxshare.company.UserVerifyVO">
+    SELECT
+    t.id id,
+    t.user_id userId,
+    t.verify_type verifyType,
+    t.real_name realName,
+    t.org_type orgType,
+    ui.mobile mobile,
+    ui.user_name userName,
+    t.idcard_no idcardNo,
+    t.idcard_front_url idcardFrontUrl,
+    t.idcard_back_url idcardBackUrl,
+    t.licence_url licenceUrl,
+    t.province province,
+    t.city city,
+    t.district district,
+    t.address address,
+    t.link_tel linkTel,
+  if(t.status=0,10,t.status) s_status,
+    t.STATUS status,
+    t.remark remark,
+    t.gmt_create gmtCreate,
+    t.gmt_modified gmtModified,
+    t.auditing_user_id auditingUserId,
+    t.auditing_user_name auditingUserName,
+    t.auditing_time auditingTime
+from user_verify t
+    LEFT JOIN user_info ui  on t.user_id=ui.id
+
+    where  t.status!=1
+      <if test="id != null and id!=''" >
+        and t.id =#{id}
+      </if>
+      <if test="realName != null and realName!=''" >
+        and t.real_name like concat('%', #{realName}, '%')
+      </if>
+      <if test="mobile != null and mobile!=''">
+        and mobile like concat('%', #{mobile}, '%')
+      </if>
+      <if test="verifyType != null and verifyType!=''">
+        and t.verify_type = #{verifyType}
+      </if>
+      <if test="status != null">
+        and t.status = #{status}
+      </if>
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(t.gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(t.gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+
+
+    order by s_status desc ,t.gmt_create desc
+  </select>
+
+
+  <select id="getByVerifyId" resultType="com.onemile.bms.pojo.vo.zxshare.company.UserVerifyVO">
+
+    SELECT
+    t.id id,
+    t.user_id userId,
+    t.verify_type verifyType,
+    t.real_name realName,
+    t.org_type orgType,
+    ui.mobile mobile,
+    ui.user_name userName,
+    t.idcard_no idcardNo,
+    t.idcard_front_url idcardFrontUrl,
+    t.idcard_back_url idcardBackUrl,
+    t.licence_url licenceUrl,
+    t.province province,
+    t.city city,
+    t.district district,
+    t.address address,
+    t.link_tel linkTel,
+    if(t.status=0,10,t.status) s_status,
+    t.STATUS status,
+    t.remark remark,
+    t.gmt_create gmtCreate,
+    t.gmt_modified gmtModified,
+    t.auditing_user_id auditingUserId,
+    t.auditing_user_name auditingUserName,
+    t.auditing_time auditingTime
+    from user_verify t
+    LEFT JOIN user_info ui  on t.user_id=ui.id
+
+    <where>
+      <if test="id != null and id!=''" >
+        and t.id =#{id}
+      </if>
+    </where>
+    and  t.status!=1
+  </select>
+
+
+
+
+  <select id="getByVerifyUserId" resultType="com.onemile.bms.pojo.vo.zxshare.company.UserVerifyVO">
+
+    SELECT
+    t.id id,
+    t.user_id userId,
+    t.verify_type verifyType,
+    t.real_name realName,
+    t.org_type orgType,
+    ui.mobile mobile,
+    ui.user_name userName,
+    t.idcard_no idcardNo,
+    t.idcard_front_url idcardFrontUrl,
+    t.idcard_back_url idcardBackUrl,
+    t.licence_url licenceUrl,
+    t.province province,
+    t.city city,
+    t.district district,
+    t.address address,
+    t.link_tel linkTel,
+    if(t.status=0,10,t.status) s_status,
+    t.STATUS status,
+    t.remark remark,
+    t.gmt_create gmtCreate,
+    t.gmt_modified gmtModified,
+    t.auditing_user_id auditingUserId,
+    t.auditing_user_name auditingUserName,
+    t.auditing_time auditingTime
+    from user_verify t
+    LEFT JOIN user_info ui  on t.user_id=ui.id
+
+    <where>
+      <if test="userId != null and userId!=''" >
+        and t.user_id =#{userId}
+      </if>
+    </where>
+  </select>
+</mapper>

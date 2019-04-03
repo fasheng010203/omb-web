@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.company.UserAccountLogMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.company.UserAccountLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="account_type" property="accountType" jdbcType="TINYINT" />
+    <result column="trans_order_id" property="transOrderId" jdbcType="BIGINT" />
+    <result column="trans_amount" property="transAmount" jdbcType="DECIMAL" />
+    <result column="trans_type" property="transType" jdbcType="TINYINT" />
+    <result column="trans_time" property="transTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, account_type, trans_order_id, trans_amount, trans_type, trans_time, 
+    remark, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_account_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_account_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.company.UserAccountLog" >
+    insert into user_account_log ( user_id, account_type, 
+      trans_order_id, trans_amount, trans_type, 
+      trans_time, remark, gmt_create, 
+      gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{accountType,jdbcType=TINYINT}, 
+      #{transOrderId,jdbcType=BIGINT}, #{transAmount,jdbcType=DECIMAL}, #{transType,jdbcType=TINYINT}, 
+      #{transTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP});
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.company.UserAccountLog" >
+    insert into user_account_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="accountType != null" >
+        account_type,
+      </if>
+      <if test="transOrderId != null" >
+        trans_order_id,
+      </if>
+      <if test="transAmount != null" >
+        trans_amount,
+      </if>
+      <if test="transType != null" >
+        trans_type,
+      </if>
+      <if test="transTime != null" >
+        trans_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="accountType != null" >
+        #{accountType,jdbcType=TINYINT},
+      </if>
+      <if test="transOrderId != null" >
+        #{transOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="transAmount != null" >
+        #{transAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transType != null" >
+        #{transType,jdbcType=TINYINT},
+      </if>
+      <if test="transTime != null" >
+        #{transTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.company.UserAccountLog" >
+    update user_account_log
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="accountType != null" >
+        account_type = #{accountType,jdbcType=TINYINT},
+      </if>
+      <if test="transOrderId != null" >
+        trans_order_id = #{transOrderId,jdbcType=BIGINT},
+      </if>
+      <if test="transAmount != null" >
+        trans_amount = #{transAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="transType != null" >
+        trans_type = #{transType,jdbcType=TINYINT},
+      </if>
+      <if test="transTime != null" >
+        trans_time = #{transTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.company.UserAccountLog" >
+    update user_account_log
+    set user_id = #{userId,jdbcType=BIGINT},
+      account_type = #{accountType,jdbcType=TINYINT},
+      trans_order_id = #{transOrderId,jdbcType=BIGINT},
+      trans_amount = #{transAmount,jdbcType=DECIMAL},
+      trans_type = #{transType,jdbcType=TINYINT},
+      trans_time = #{transTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

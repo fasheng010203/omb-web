@@ -1,0 +1,4 @@
+com/onemile/bms/service/share/base/SuggestService.class
+com/onemile/bms/service/share/base/AppVersionService.class
+com/onemile/bms/service/share/base/impl/AppVersionServiceImpl.class
+com/onemile/bms/service/share/base/impl/SuggestServiceImpl.class

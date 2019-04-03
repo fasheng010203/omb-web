@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.device.SbStatusMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.device.SbStatus" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="devId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="temp" property="temp" jdbcType="VARCHAR" />
+    <result column="humi" property="humi" jdbcType="VARCHAR" />
+    <result column="mbat" property="mbat" jdbcType="INTEGER" />
+    <result column="sbat" property="sbat" jdbcType="INTEGER" />
+    <result column="vbat" property="vbat" jdbcType="VARCHAR" />
+    <result column="obsA" property="obsa" jdbcType="VARCHAR" />
+    <result column="obsB" property="obsb" jdbcType="VARCHAR" />
+    <result column="gate" property="gate" jdbcType="VARCHAR" />
+    <result column="at" property="at" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dev_id, title, temp, humi, mbat, sbat, vbat, obsA, obsB, gate, at, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sb_status
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sb_status
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.device.SbStatus" >
+    insert into sb_status ( dev_id, title, 
+      temp, humi, mbat, sbat, 
+      vbat, obsA, obsB, gate, 
+      at, gmt_create)
+    values (#{id,jdbcType=BIGINT}, #{devId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{temp,jdbcType=VARCHAR}, #{humi,jdbcType=VARCHAR}, #{mbat,jdbcType=INTEGER}, #{sbat,jdbcType=INTEGER}, 
+      #{vbat,jdbcType=VARCHAR}, #{obsa,jdbcType=VARCHAR}, #{obsb,jdbcType=VARCHAR}, #{gate,jdbcType=VARCHAR}, 
+      #{at,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP});
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.device.SbStatus" >
+    insert into sb_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="temp != null" >
+        temp,
+      </if>
+      <if test="humi != null" >
+        humi,
+      </if>
+      <if test="mbat != null" >
+        mbat,
+      </if>
+      <if test="sbat != null" >
+        sbat,
+      </if>
+      <if test="vbat != null" >
+        vbat,
+      </if>
+      <if test="obsa != null" >
+        obsA,
+      </if>
+      <if test="obsb != null" >
+        obsB,
+      </if>
+      <if test="gate != null" >
+        gate,
+      </if>
+      <if test="at != null" >
+        at,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="temp != null" >
+        #{temp,jdbcType=VARCHAR},
+      </if>
+      <if test="humi != null" >
+        #{humi,jdbcType=VARCHAR},
+      </if>
+      <if test="mbat != null" >
+        #{mbat,jdbcType=INTEGER},
+      </if>
+      <if test="sbat != null" >
+        #{sbat,jdbcType=INTEGER},
+      </if>
+      <if test="vbat != null" >
+        #{vbat,jdbcType=VARCHAR},
+      </if>
+      <if test="obsa != null" >
+        #{obsa,jdbcType=VARCHAR},
+      </if>
+      <if test="obsb != null" >
+        #{obsb,jdbcType=VARCHAR},
+      </if>
+      <if test="gate != null" >
+        #{gate,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.device.SbStatus" >
+    update sb_status
+    <set >
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="temp != null" >
+        temp = #{temp,jdbcType=VARCHAR},
+      </if>
+      <if test="humi != null" >
+        humi = #{humi,jdbcType=VARCHAR},
+      </if>
+      <if test="mbat != null" >
+        mbat = #{mbat,jdbcType=INTEGER},
+      </if>
+      <if test="sbat != null" >
+        sbat = #{sbat,jdbcType=INTEGER},
+      </if>
+      <if test="vbat != null" >
+        vbat = #{vbat,jdbcType=VARCHAR},
+      </if>
+      <if test="obsa != null" >
+        obsA = #{obsa,jdbcType=VARCHAR},
+      </if>
+      <if test="obsb != null" >
+        obsB = #{obsb,jdbcType=VARCHAR},
+      </if>
+      <if test="gate != null" >
+        gate = #{gate,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        at = #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.device.SbStatus" >
+    update sb_status
+    set dev_id = #{devId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      temp = #{temp,jdbcType=VARCHAR},
+      humi = #{humi,jdbcType=VARCHAR},
+      mbat = #{mbat,jdbcType=INTEGER},
+      sbat = #{sbat,jdbcType=INTEGER},
+      vbat = #{vbat,jdbcType=VARCHAR},
+      obsA = #{obsa,jdbcType=VARCHAR},
+      obsB = #{obsb,jdbcType=VARCHAR},
+      gate = #{gate,jdbcType=VARCHAR},
+      at = #{at,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

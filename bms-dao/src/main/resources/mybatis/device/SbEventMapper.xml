@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.device.SbEventMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.device.SbEvent" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="dev_id" property="devId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="evt" property="evt" jdbcType="VARCHAR" />
+    <result column="at" property="at" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, dev_id, title, evt, at, gmt_create
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sb_event
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sb_event
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.device.SbEvent" >
+    insert into sb_event ( dev_id, title, 
+      evt, at, gmt_create
+      )
+    values (#{id,jdbcType=BIGINT}, #{devId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{evt,jdbcType=VARCHAR}, #{at,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.device.SbEvent" >
+    insert into sb_event
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="evt != null" >
+        evt,
+      </if>
+      <if test="at != null" >
+        at,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="evt != null" >
+        #{evt,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.device.SbEvent" >
+    update sb_event
+    <set >
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="evt != null" >
+        evt = #{evt,jdbcType=VARCHAR},
+      </if>
+      <if test="at != null" >
+        at = #{at,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.device.SbEvent" >
+    update sb_event
+    set dev_id = #{devId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      evt = #{evt,jdbcType=VARCHAR},
+      at = #{at,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="listPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    FROM
+    sb_event
+    <where>
+
+      <if test="title != null and title!=''" >
+        and title =#{title}
+      </if>
+
+      <if test="devid != null and devid!=''" >
+        and dev_id =#{devid}
+      </if>
+
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+
+    </where>
+    order by gmt_create desc
+  </select>
+
+
+  <select id="listDeviceEvt" resultMap="BaseResultMap">
+
+  SELECT
+  dev_id,
+  evt,
+  AT
+  From
+  (SELECT
+  dev_id,
+  id,
+  evt,
+  gmt_create,
+  AT
+  FROM
+  sb_event t
+  ORDER BY
+  AT DESC) t
+  GROUP BY t.dev_id,t.evt
+
+  </select>
+
+
+
+
+
+
+
+
+</mapper>

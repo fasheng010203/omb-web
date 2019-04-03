@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.admin.AdminResourceMapper">
+    <resultMap id="BaseResultMap" type="com.onemile.bms.entity.admin.AdminResource">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="app_id" property="appId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="is_super" property="isSuper" jdbcType="TINYINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="menu_leaf_flag" property="menuLeafFlag" jdbcType="TINYINT"/>
+        <result column="menu_leaf_url" property="menuLeafUrl" jdbcType="VARCHAR"/>
+        <result column="menu_leaf_mode" property="menuLeafMode" jdbcType="TINYINT"/>
+        <result column="pid" property="pid" jdbcType="BIGINT"/>
+        <result column="layer" property="layer" jdbcType="TINYINT"/>
+        <result column="order_no" property="orderNo" jdbcType="INTEGER"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, code, app_id, type, is_super, name, menu_leaf_flag, menu_leaf_url, menu_leaf_mode,
+    pid, layer, order_no, icon, remark, gmt_create, gmt_modified
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_resource
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_resource
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.onemile.bms.entity.admin.AdminResource">
+        insert into admin_resource ( code, app_id,
+        type, is_super, name,
+        menu_leaf_flag, menu_leaf_url, menu_leaf_mode,
+        pid, layer, order_no,
+        icon, remark, gmt_create,
+        gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR}, #{appId,jdbcType=BIGINT},
+        #{type,jdbcType=TINYINT}, #{isSuper,jdbcType=TINYINT}, #{name,jdbcType=VARCHAR},
+        #{menuLeafFlag,jdbcType=TINYINT}, #{menuLeafUrl,jdbcType=VARCHAR}, #{menuLeafMode,jdbcType=TINYINT},
+        #{pid,jdbcType=BIGINT}, #{layer,jdbcType=TINYINT}, #{orderNo,jdbcType=INTEGER},
+        #{icon,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
+        #{gmtModified,jdbcType=TIMESTAMP});
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <insert id="insertSelective" parameterType="com.onemile.bms.entity.admin.AdminResource">
+        insert into admin_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="appId != null">
+                app_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isSuper != null">
+                is_super,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="menuLeafFlag != null">
+                menu_leaf_flag,
+            </if>
+            <if test="menuLeafUrl != null">
+                menu_leaf_url,
+            </if>
+            <if test="menuLeafMode != null">
+                menu_leaf_mode,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="layer != null">
+                layer,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=TINYINT},
+            </if>
+            <if test="isSuper != null">
+                #{isSuper,jdbcType=TINYINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="menuLeafFlag != null">
+                #{menuLeafFlag,jdbcType=TINYINT},
+            </if>
+            <if test="menuLeafUrl != null">
+                #{menuLeafUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="menuLeafMode != null">
+                #{menuLeafMode,jdbcType=TINYINT},
+            </if>
+            <if test="pid != null">
+                #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="layer != null">
+                #{layer,jdbcType=TINYINT},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.admin.AdminResource">
+        update admin_resource
+        <set>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="appId != null">
+                app_id = #{appId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=TINYINT},
+            </if>
+            <if test="isSuper != null">
+                is_super = #{isSuper,jdbcType=TINYINT},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="menuLeafFlag != null">
+                menu_leaf_flag = #{menuLeafFlag,jdbcType=TINYINT},
+            </if>
+            <if test="menuLeafUrl != null">
+                menu_leaf_url = #{menuLeafUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="menuLeafMode != null">
+                menu_leaf_mode = #{menuLeafMode,jdbcType=TINYINT},
+            </if>
+            <if test="pid != null">
+                pid = #{pid,jdbcType=BIGINT},
+            </if>
+            <if test="layer != null">
+                layer = #{layer,jdbcType=TINYINT},
+            </if>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.admin.AdminResource">
+    update admin_resource
+    set code = #{code,jdbcType=VARCHAR},
+      app_id = #{appId,jdbcType=BIGINT},
+      type = #{type,jdbcType=TINYINT},
+      is_super = #{isSuper,jdbcType=TINYINT},
+      name = #{name,jdbcType=VARCHAR},
+      menu_leaf_flag = #{menuLeafFlag,jdbcType=TINYINT},
+      menu_leaf_url = #{menuLeafUrl,jdbcType=VARCHAR},
+      menu_leaf_mode = #{menuLeafMode,jdbcType=TINYINT},
+      pid = #{pid,jdbcType=BIGINT},
+      layer = #{layer,jdbcType=TINYINT},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <!-- 以上是工具自动生成 请勿更改 -->
+
+
+    <!-- 用户登录后，加载的左导航菜单-->
+    <select id="selectUserRoleResource" resultType="com.onemile.bms.pojo.vo.admin.AdminMenuVO">
+        SELECT
+        a.id id ,
+        a. NAME text ,
+        a.menu_leaf_url url ,
+        a.pid pid,
+        a.icon icon
+        FROM
+        admin_resource a
+        <if test="userId != null">
+            INNER JOIN(
+            SELECT DISTINCT
+            (resource_id) resource_id
+            FROM
+            admin_role_resource
+            WHERE
+            role_id IN(
+            SELECT
+            role_id
+            FROM
+            admin_user_role
+            WHERE
+            user_id = #{userId}
+            )
+            ) AS b ON a.id = b.resource_id
+        </if>
+        WHERE
+        a.type = 1 and pid != 0
+        <if test="isSuper != null">
+            and is_super = #{isSuper}
+        </if>
+        ORDER BY a.order_no ASC
+    </select>
+
+
+    <select id="listRecource" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_resource
+        <where>
+            <if test="type != null">
+                and type = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="pid != null">
+                and pid = #{pid,jdbcType=BIGINT}
+            </if>
+        </where>
+        order by order_no ASC
+    </select>
+
+    <select id="countByCode" resultType="Integer">
+        select
+        count (*)
+        from admin_resource
+        <where>
+            <if test="appId != null">
+                and app_id = #{appId,jdbcType=BIGINT}
+            </if>
+            <if test="code != null and code != '' ">
+                and code = #{code,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="getMaxId" resultType="Long">
+      SELECT
+            max(id)
+      from admin_resource
+       WHERE  pid = #{pid}
+    </select>
+
+    <select id="countChildMenus" resultType="Integer">
+      SELECT
+            count(*)
+      from admin_resource
+      WHERE  pid = #{pid} and type = 1
+    </select>
+
+    <delete id="deleteByPid" parameterType="Long">
+        delete  from  admin_resource where pid=#{pid}
+    </delete>
+</mapper>

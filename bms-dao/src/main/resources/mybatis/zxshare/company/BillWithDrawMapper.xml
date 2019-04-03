@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.company.BillWithDrawMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.company.BillWithDraw" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="bank_code" property="bankCode" jdbcType="VARCHAR" />
+    <result column="bank_name" property="bankName" jdbcType="VARCHAR" />
+    <result column="bank_branch_name" property="bankBranchName" jdbcType="VARCHAR" />
+    <result column="bank_account_name" property="bankAccountName" jdbcType="VARCHAR" />
+    <result column="bank_card_no" property="bankCardNo" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="with_draw_type" property="withDrawType" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+    <result column="pay_url" property="payUrl" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="auditing_user_id" property="auditingUserId" jdbcType="BIGINT" />
+    <result column="auditing_user_name" property="auditingUserName" jdbcType="VARCHAR" />
+    <result column="auditing_time" property="auditingTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, bank_code, bank_name, bank_branch_name, bank_account_name, bank_card_no, 
+    amount, with_draw_type, status, pay_time, pay_url, gmt_create, gmt_modified, auditing_user_id, 
+    auditing_user_name, auditing_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bill_with_draw
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bill_with_draw
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.company.BillWithDraw" >
+    insert into bill_with_draw ( user_id, bank_code, 
+      bank_name, bank_branch_name, bank_account_name, 
+      bank_card_no, amount, with_draw_type, 
+      status, pay_time, pay_url, 
+      gmt_create, gmt_modified, auditing_user_id, 
+      auditing_user_name, auditing_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{bankCode,jdbcType=VARCHAR}, 
+      #{bankName,jdbcType=VARCHAR}, #{bankBranchName,jdbcType=VARCHAR}, #{bankAccountName,jdbcType=VARCHAR}, 
+      #{bankCardNo,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{withDrawType,jdbcType=TINYINT}, 
+      #{status,jdbcType=TINYINT}, #{payTime,jdbcType=TIMESTAMP}, #{payUrl,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{auditingUserId,jdbcType=BIGINT}, 
+      #{auditingUserName,jdbcType=VARCHAR}, #{auditingTime,jdbcType=TIMESTAMP});
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.company.BillWithDraw" >
+    insert into bill_with_draw
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="bankCode != null" >
+        bank_code,
+      </if>
+      <if test="bankName != null" >
+        bank_name,
+      </if>
+      <if test="bankBranchName != null" >
+        bank_branch_name,
+      </if>
+      <if test="bankAccountName != null" >
+        bank_account_name,
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="withDrawType != null" >
+        with_draw_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="payTime != null" >
+        pay_time,
+      </if>
+      <if test="payUrl != null" >
+        pay_url,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+      <if test="auditingUserId != null" >
+        auditing_user_id,
+      </if>
+      <if test="auditingUserName != null" >
+        auditing_user_name,
+      </if>
+      <if test="auditingTime != null" >
+        auditing_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="bankCode != null" >
+        #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchName != null" >
+        #{bankBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountName != null" >
+        #{bankAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="withDrawType != null" >
+        #{withDrawType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="payTime != null" >
+        #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payUrl != null" >
+        #{payUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditingUserId != null" >
+        #{auditingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="auditingUserName != null" >
+        #{auditingUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditingTime != null" >
+        #{auditingTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.company.BillWithDraw" >
+    update bill_with_draw
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="bankCode != null" >
+        bank_code = #{bankCode,jdbcType=VARCHAR},
+      </if>
+      <if test="bankName != null" >
+        bank_name = #{bankName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankBranchName != null" >
+        bank_branch_name = #{bankBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankAccountName != null" >
+        bank_account_name = #{bankAccountName,jdbcType=VARCHAR},
+      </if>
+      <if test="bankCardNo != null" >
+        bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="withDrawType != null" >
+        with_draw_type = #{withDrawType,jdbcType=TINYINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="payTime != null" >
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payUrl != null" >
+        pay_url = #{payUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditingUserId != null" >
+        auditing_user_id = #{auditingUserId,jdbcType=BIGINT},
+      </if>
+      <if test="auditingUserName != null" >
+        auditing_user_name = #{auditingUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditingTime != null" >
+        auditing_time = #{auditingTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.company.BillWithDraw" >
+    update bill_with_draw
+    set user_id = #{userId,jdbcType=BIGINT},
+      bank_code = #{bankCode,jdbcType=VARCHAR},
+      bank_name = #{bankName,jdbcType=VARCHAR},
+      bank_branch_name = #{bankBranchName,jdbcType=VARCHAR},
+      bank_account_name = #{bankAccountName,jdbcType=VARCHAR},
+      bank_card_no = #{bankCardNo,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=DECIMAL},
+      with_draw_type = #{withDrawType,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
+      pay_time = #{payTime,jdbcType=TIMESTAMP},
+      pay_url = #{payUrl,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      auditing_user_id = #{auditingUserId,jdbcType=BIGINT},
+      auditing_user_name = #{auditingUserName,jdbcType=VARCHAR},
+      auditing_time = #{auditingTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+
+
+  <select id="listPage" resultType="com.onemile.bms.pojo.vo.zxshare.company.BillWithDrawVO">
+    SELECT
+    t.id id ,
+    t.user_id userId,
+    uv.real_name realName,
+    uv.verify_type verifyType,
+    ui.mobile mobile,
+    t.bank_code bankCode,
+    t.bank_name bankName,
+    t.bank_branch_name bankBranchName,
+    t.bank_account_name bankAccountName,
+    t.bank_card_no bankCardNo,
+    t.amount amount,
+    t.with_draw_type withDrawType,
+    t. STATUS status,
+    IF (t. STATUS = 0, 10, t. STATUS) s_status,
+    t.pay_time payTime,
+    t.pay_url payUrl,
+    t.gmt_create gmtCreate,
+    t.gmt_modified gmtModified,
+    t.auditing_user_id auditingUserId,
+    t.auditing_user_name auditingUserName,
+    t.auditing_time auditingTime
+    FROM
+    bill_with_draw t
+    LEFT JOIN user_verify uv ON t.user_id = uv.user_id
+    LEFT JOIN user_info ui ON t.user_id = ui.id
+    <where>
+      <if test="id != null and id!=''" >
+        and t.id =#{id}
+      </if>
+      <if test="realName != null and realName!=''" >
+        and uv.real_name like concat('%', #{realName}, '%')
+      </if>
+      <if test="bankCardNo != null and bankCardNo!=''">
+        and t.bank_card_no like concat('%', #{bankCardNo}, '%')
+      </if>
+      <if test="verifyType != null and verifyType!=''">
+        and uv.verify_type = #{verifyType}
+      </if>
+      <if test="status != null">
+        and t.status = #{status}
+      </if>
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(t.gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(t.gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+    </where>
+    order by s_status desc ,t.gmt_create desc
+  </select>
+
+
+  <select id="getByBillWithDrawId" resultType="com.onemile.bms.pojo.vo.zxshare.company.BillWithDrawVO">
+      SELECT
+    t.id id ,
+    t.user_id userId,
+    uv.real_name realName,
+    uv.verify_type verifyType,
+    ui.mobile mobile,
+    t.bank_code bankCode,
+    t.bank_name bankName,
+    t.bank_branch_name bankBranchName,
+    t.bank_account_name bankAccountName,
+    t.bank_card_no bankCardNo,
+    t.amount amount,
+    t.with_draw_type withDrawType,
+    t. STATUS status,
+    IF (t. STATUS = 0, 10, t. STATUS) s_status,
+    t.pay_time payTime,
+    t.pay_url payUrl,
+    t.gmt_create gmtCreate,
+    t.gmt_modified gmtModified,
+    t.auditing_user_id auditingUserId,
+    t.auditing_user_name auditingUserName,
+    t.auditing_time auditingTime
+    FROM
+    bill_with_draw t
+    LEFT JOIN user_verify uv ON t.user_id = uv.user_id
+    LEFT JOIN user_info ui ON t.user_id = ui.id
+
+    <where>
+    <if test="id != null and id!=''" >
+      and t.id =#{id}
+    </if>
+    </where>
+  </select>
+</mapper>

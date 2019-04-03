@@ -1,0 +1,423 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+<div class="main-content-inner">
+
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+
+            <li>
+                <a href="#">权限管理</a>
+            </li>
+            <li class="active">角色管理</li>
+        </ul><!-- /.breadcrumb -->
+
+    </div>
+
+
+    <div class="page-content">
+
+
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form id="search_form">
+                    <div class="col-xs-2">
+                        <input id="userName" name="userName" type="text" placeholder="角色名称" class="form-control">
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="input-daterange input-group">
+                            <input class="form-control" name="beginDate" type="text" placeholder="开始时间">
+                            <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                            <input class="form-control" name="endDate" type="text" placeholder="结束时间">
+                        </div>
+                    </div>
+                    <div class="col-xs-1 wizard-actions">
+                        <button onclick="search('/admin/getRoleList','grid-table')" class="btn btn-purple btn-sm wizard-actions"
+                                type="button">
+                            <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                            查询
+                        </button>
+                    </div>
+                    <div class="col-xs-1 wizard-actions">
+                        <button onclick="clearSearch();" class="btn btn-purple btn-sm wizard-actions" type="reset">
+                            <span class="ace-icon fa fa-undo icon-on-right bigger-110"></span>
+                            重置
+                        </button>
+                    </div>
+                </form>
+                <br/>
+                <hr/>
+            </div><!-- /.col -->
+            <div class="col-sm-12">
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="grid-pager"></div>
+                            <table id="grid-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-form" class="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 id="modal_title" class="blue bigger">新增角色</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="get">
+                            <input type="hidden" id="id" name="id">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">角色名称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="name" id="name" class="col-xs-12 col-sm-6" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">角色编码:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="code" id="code" class="col-xs-12 col-sm-6"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+
+                <button onclick="save();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-users" class="modal" tabindex="-1">
+    <div class="modal-dialog width-70">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger">用户列表</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div id="user_col_xs" class="col-xs-12">
+                        <div id="grid_user_pager"></div>
+                        <table id="grid_user_table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    //初始化查询条件日历控件
+    $('.input-daterange').datepicker({
+        autoclose: true,
+        language: 'cn',
+        format: 'yyyy-mm-dd',
+        todayBtn: 'linked',
+        todayHighlight: true,
+    })
+
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+
+    $(window).on('resize.jqGrid', function () {
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    });
+
+
+    // 初始化role grid
+    var dgData;
+    jQuery(grid_selector).jqGrid({
+        caption: '角色列表',
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: pager_selector,
+        viewrecords: true,
+        datatype: "json",
+        url: '/admin/getRoleList',
+        colModel: [
+            {name: 'action', index: '', label: '操作', width: 150, fixed: false, sortable: false, resize: true, formatter: acFormat},
+            {name: 'id', index: 'id', label: 'id', width: 60, sorttype: "int", hidden: true},
+            {name: 'name', index: 'name', label: '角色名称', width: 200},
+            {name: 'code', index: 'code', label: '角色编码', width: 200,},
+            {name: 'userCnt', index: 'user_cnt', label: '用户数量', width: 150, sortable: false, formatter: userFormat},
+            {name: 'gmtCreate', index: 'gmt_create', label: '创建时间', width: 200, sorttype: 'date'}
+        ],
+        loadComplete: function (data) {
+            var table = this;
+            dgData = data.rows;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    // 初始化user_grid
+    jQuery('#grid_user_table').jqGrid({
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: '#grid_user_pager',
+        viewrecords: true,
+        datatype: "json",
+        url: '/admin/getUserList?roleId=0',
+        colModel: [
+            {name: 'loginName', index: 'login_name', label: '登录名称', width: 150},
+            {name: 'realName', index: 'real_name', label: '真实姓名', width: 120},
+            {name: 'deptName', label: '所属部门', width: 120, sortable: false},
+            {name: 'mobile', index: 'mobile', label: '联系手机号码', width: 150, sortable: false},
+            {name: 'gmtCreate', index: 'gmt_create', label: '创建时间', width: 150, sorttype: 'date'}
+        ],
+        loadComplete: function (data) {
+            var table = this;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    $(window).triggerHandler('resize.jqGrid');
+
+    //role grid 按钮
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+
+    $(function () {
+      <@shiro.hasPermission name = "${add}" >
+       jQuery(grid_selector).navButtonAdd(pager_selector, {
+            caption: "",
+            position: "last",
+            buttonicon: "ace-icon fa fa-plus-circle purple",
+            onClickButton: function () {
+                //清空
+                clearAddForm('#addForm');
+                //打开 modal
+                $('#modal-form').modal();
+            }
+        });
+      </@shiro.hasPermission>
+    });
+    // user grid 按钮
+    jQuery('#grid_user_table')
+        .navGrid('#grid_user_pager', {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+
+    //操作按钮format
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        var actionHtml = "<div class=\"hidden-sm hidden-xs btn-group\">";
+        var btnEdit = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEdit(" + id + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-pencil bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnDelete = "<@shiro.hasPermission name='${del}'><button onclick='javascript:rowDel(" + id + ");' class=\"btn btn-xs btn-danger\"><i class=\"ace-icon fa fa-trash-o bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnResc = "<@shiro.hasPermission name='${resc}'><button onclick='javascript:addResc(" + id + ");' class=\"btn btn-xs btn-primary\"><i class=\"ace-icon fa fa-sitemap bigger-110\"></i></button></@shiro.hasPermission>";
+        actionHtml += btnEdit + btnDelete + btnResc;
+        actionHtml += "</div>";
+        return actionHtml;
+    }
+
+    //包含用户数操作按钮format
+    function userFormat(cellvalue, options, rowObject) {
+        var result;
+        result = "<a href='javascript:void(0)' onclick='openUserModal(" + rowObject.id + ")'>" + cellvalue + "</a> "
+        return result;
+    }
+
+    function openUserModal(roleId) {
+
+        var userUrl = '/admin/getUserList?roleId=' + roleId;
+        jQuery('#grid_user_table').jqGrid('setGridParam', {
+            url: userUrl
+        }).trigger("reloadGrid");
+
+        $('#modal-users').modal();
+        // 设置grid宽度 以免超出父元素宽度
+        $('#grid_user_table').jqGrid('setGridWidth', $('#user_col_xs').width());
+    }
+
+    // 编辑
+    function rowEdit(id) {
+        var rowData = getGridRowData(dgData, id)
+        $('#modal_title').html("修改角色");
+        $('#modal-form').modal();
+        //填充表单
+        $.setForm('#addForm', rowData);
+        //清除 Validation 验证信息
+        $("#addForm").validate().resetForm();
+    }
+
+    //删除
+    function rowDel(id) {
+        if (Zx.isEmpty(id)) {
+            Zx.msg("请选择要删除的行");
+            return false;
+        }
+        layer.confirm('您确定要删除该条记录吗？', {
+            btn: ['确定删除', '我再想想',]
+        }, function () {
+            Zx.post({
+                url: "/admin/deleteRole",
+                loading: true,
+                data: {
+                    id: id,
+                },
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg('删除成功');
+                        $('#grid-table').trigger("reloadGrid");
+                    } else if (data.code == 1) {
+                        Zx.msg(data.message);
+                    }
+                }
+            });
+        }, function () {
+
+        });
+    }
+
+    function addResc(id) {
+        // 默认最大化，否则 layer.open
+        layer.full(
+            layer.open({
+                type: 2,
+                title: '角色分配资源',
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['800px', '400px'],
+                content: '/admin/roleRescource?roleId=' + id,
+                end: function () {
+                    //刷新父页面
+                    // location.reload();
+                }
+            })
+        );
+    }
+
+    // 表单验证
+    $('#addForm').validate({
+        errorElement: 'div',
+        errorClass: 'help-block',
+        rules: {
+            name: {
+                required: true
+            }
+        },
+        highlight: function (e) {
+            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        },
+        success: function (e) {
+            $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info')
+            $(e).remove();
+        },
+        errorPlacement: function (error, element) {
+            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                var controls = element.closest('div[class*="col-"]');
+                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+            }
+            else error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+        },
+        invalidHandler: function (form) {
+        }
+    });
+
+    //保存
+    function save() {
+        // 验证表单
+        if (!$("#addForm").validate().form()) {
+            return false;
+        }
+        var vname = $('#name').val();
+        var vcode = $('#code').val();
+        var vroleId = $('#id').val();
+
+        if (Zx.isEmpty(vroleId)) {
+            var saveUrl = "/admin/saveRole";
+        } else {
+            var saveUrl = "/admin/updateRole";
+        }
+
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                Zx.post({
+                    url: saveUrl,
+                    loading: true,
+                    data: {
+                        name: vname,
+                        code: vcode,
+                        id: vroleId,
+                    },
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('保存成功');
+                            $("#modal-form").modal("toggle");
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+
+
+    }
+
+
+</script>
+
+</@defaultLayout.layout>
+

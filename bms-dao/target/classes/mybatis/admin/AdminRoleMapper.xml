@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.admin.AdminRoleMapper">
+    <resultMap id="BaseResultMap" type="com.onemile.bms.entity.admin.AdminRole">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="mch_id" property="mchId" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="user_cnt" property="userCnt" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, mch_id, code, name, user_cnt, remark, gmt_create, gmt_modified
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_role
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_role
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.onemile.bms.entity.admin.AdminRole">
+        insert into admin_role ( mch_id, code,
+        name, user_cnt, remark,
+        gmt_create, gmt_modified)
+        values (#{id,jdbcType=BIGINT}, #{mchId,jdbcType=BIGINT}, #{code,jdbcType=VARCHAR},
+        #{name,jdbcType=VARCHAR}, #{userCnt,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
+        #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP});
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <insert id="insertSelective" parameterType="com.onemile.bms.entity.admin.AdminRole">
+        insert into admin_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="mchId != null">
+                mch_id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="userCnt != null">
+                user_cnt,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="mchId != null">
+                #{mchId,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="userCnt != null">
+                #{userCnt,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.admin.AdminRole">
+        update admin_role
+        <set>
+            <if test="mchId != null">
+                mch_id = #{mchId,jdbcType=BIGINT},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="userCnt != null">
+                user_cnt = #{userCnt,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.admin.AdminRole">
+    update admin_role
+    set mch_id = #{mchId,jdbcType=BIGINT},
+      code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      user_cnt = #{userCnt,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!-- 以上是工具自动生成 -->
+    <select id="listPage" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_role
+        <where>
+            <if test="mchId != null ">
+                and mch_id = #{mchId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and name like concat('%', #{roleName}, '%')
+            </if>
+            <if test="beginDate != null and beginDate != ''">
+                and <![CDATA[ left(gmt_create,10) >=  #{beginDate}  ]]>
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and <![CDATA[ left(gmt_create,10) <=  #{endDate}  ]]>
+            </if>
+        </where>
+    </select>
+
+    <select id="CountRoleUsers" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+            count(*) as userCnt ,
+            a.role_id id
+        FROM  admin_user_role a
+        INNER JOIN admin_role b ON b.id = a.role_id AND b.mch_id = #{mchId}
+        GROUP BY a.role_id
+    </select>
+
+    <update id="updateUserCnt" parameterType="Long">
+        update admin_role a  set  a.user_Cnt = (SELECT count(*) from  admin_user_role b where b.role_id= a.id)
+        where a.mch_id =#{mchId}
+    </update>
+
+
+</mapper>

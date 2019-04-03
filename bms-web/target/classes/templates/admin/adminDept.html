@@ -1,0 +1,403 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+<div class="main-content-inner">
+
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+
+            <li>
+                <a href="#">权限管理</a>
+            </li>
+            <li class="active">组织机构管理</li>
+        </ul><!-- /.breadcrumb -->
+
+    </div>
+
+    <div class="page-content">
+
+        <!--<section class="content" id="section-content">-->
+
+            <!--<div class="col-lg-3 col-xs-6">-->
+                <!--&lt;!&ndash; small box &ndash;&gt;-->
+                <!--<div class="small-box bg-aqua">-->
+                    <!--<div class="inner">-->
+                        <!--<h3>12</h3>-->
+                        <!--<p>物联网设备总数</p>-->
+                    <!--</div>-->
+                    <!--<div class="icon">-->
+                        <!--<i class="fa fa-industry"></i>-->
+                    <!--</div>-->
+                    <!--<a href="/admin/device/index.html" class="small-box-footer">更多<i class="fa fa-arrow-circle-right"></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+            <!--<div class="col-lg-3 col-xs-6">-->
+                <!--&lt;!&ndash; small box &ndash;&gt;-->
+                <!--<div class="small-box bg-green">-->
+                    <!--<div class="inner">-->
+                        <!--<h3>1</h3>-->
+                        <!--<p>物联网在线设备总数</p>-->
+                    <!--</div>-->
+                    <!--<div class="icon">-->
+                        <!--<i class="fa fa-industry"></i>-->
+                    <!--</div>-->
+                    <!--<a href="/admin/device/index.html" class="small-box-footer">更多<i class="fa fa-arrow-circle-right"></i></a>-->
+                <!--</div>-->
+            <!--</div>-->
+
+
+        <!--</section>-->
+
+
+
+
+        <div class="row">
+
+
+
+
+
+
+
+
+            <div class="col-xs-12">
+                <div id="grid-pager"></div>
+                <table id="grid-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-form" class="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 id="modal_title" class="blue bigger">新增组织机构</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="get">
+                            <input name="deptId" id="deptId" type="hidden">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">组织机构名称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" id="name" name="name" class="col-xs-12 col-sm-6" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">显示排序:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" id="orderNo" name="orderNo" class="col-xs-12 col-sm-6" required/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="save();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+
+
+    //resize to fit page size
+    $(window).on('resize.jqGrid', function () {
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    })
+
+    // 初始化grid
+    jQuery(grid_selector).jqGrid({
+        caption: '组织机构列表',
+        url: "/admin/getDeptList",
+        colModel: [
+            {
+                "name": "id",
+                "index": "id",
+                "key": true,
+                "hidden": true,
+                "sortable": false,
+                "width": 20
+            }, {
+                "name": "name",
+                "index": "name",
+                "label": "组织机构名称",
+                "sortable": false,
+                "width": 170
+            }, {
+                "name": "orderNo",
+                "index": "orderNo",
+                "label": "显示排序",
+                "sortable": false,
+                "width": 90
+            }, {
+                "name": "gmtCreate",
+                "index": "gmtCreate",
+                "sortable": false,
+                "label": "创建时间",
+                "width": 100
+            }, {
+                "name": "gmtModified",
+                "index": "gmtModified",
+                "label": "更新时间",
+                "sortable": false,
+                "width": 100
+            },
+            {
+                "name": "action",
+                "index": "",
+                "label": "操作",
+                "sortable": false,
+                "formatter": acFormat,
+            }, {
+                "name": "parentId",
+                "hidden": true
+            }, {
+                "name": "layer",
+                "hidden": true
+            }
+        ],
+        hoverrows: false,
+        gridview: true,
+        treeGrid: true,
+        height: "auto",
+        scrollrows: false,
+        pager: pager_selector,
+        ExpandColClick: true,
+        ExpandColumn: "name",
+        treedatatype: "json",
+        treeGridModel: "adjacency",
+        treeReader: {
+            "parent_id_field": "parentId",
+            "level_field": "layer",
+            "leaf_field": "leaf",
+            "expanded_field": "expanded"
+        },
+        treeIcons: {
+            plus: 'ace-icon glyphicon glyphicon-plus',
+            minus: 'ace-icon glyphicon glyphicon-minus',
+            leaf: 'ace-icon glyphicon glyphicon-file'
+        },
+        datatype: "json",
+        loadComplete: function () {
+            var table = this;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    //grid navButtons
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false, refresh: false,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+    $(function () {
+      <@shiro.hasPermission name = "${add}" >
+            jQuery(grid_selector).navButtonAdd(pager_selector, {
+                caption: "",
+                position: "last",
+                buttonicon: "ace-icon fa fa-plus-circle purple",
+                onClickButton: function () {
+                    var rowid = $(grid_selector).jqGrid("getGridParam", "selrow");
+                    if (Zx.isEmpty(rowid)) {
+                        Zx.msg("请选择所属的机构");
+                        return false;
+                    }
+                    var rowData = $(grid_selector).jqGrid('getRowData', rowid);
+                    var vlayer = rowData.layer;
+                    if (vlayer >= 2) {
+                        Zx.msg("层级限制为3级,如需更多层级请联系管理员");
+                        return false;
+                    }
+                    clearAddForm();
+                    $('#modal_title').html("新增组织机构");
+                    $('#modal-form').modal();
+                }
+            });
+       </@shiro.hasPermission>
+    });
+
+
+    //trigger window resize to make the grid get the correct size
+    $(window).triggerHandler('resize.jqGrid');
+
+
+    //操作按钮format
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId;
+
+        var actionHtml = "<div class=\"hidden-sm hidden-xs btn-group\">";
+        var btnEdit = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEdit(" + rowIndex + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-pencil bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnDelete = "<@shiro.hasPermission name='${del}'><button onclick='javascript:rowDel(" + id + ");' class=\"btn btn-xs btn-danger\"><i class=\"ace-icon fa fa-trash-o bigger-110\"></i></button></@shiro.hasPermission>";
+        actionHtml += btnEdit + btnDelete;
+
+        actionHtml += "</div>";
+
+        return actionHtml;
+    }
+
+
+    function rowEdit(rowIndex) {
+        // 获取grid row
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        $('#deptId').val(rowData.id);
+        //修改modal标题
+        $('#modal_title').html("修改组织机构");
+        //将Json值填充至表单
+        $.setForm('#addForm', rowData);
+        //打开弹出框
+        $('#modal-form').modal();
+    }
+
+    // 表单验证
+    $('#addForm').validate({
+        errorElement: 'div',
+        errorClass: 'help-block',
+        rules: {
+            name: {
+                required: true
+            },
+            orderNo: {
+                required: true,
+                digits: true
+            }
+        },
+        highlight: function (e) {
+            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        },
+        success: function (e) {
+            $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info')
+            $(e).remove();
+        },
+        errorPlacement: function (error, element) {
+            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                var controls = element.closest('div[class*="col-"]');
+                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+            }
+            else error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+        },
+        invalidHandler: function (form) {
+        }
+    });
+
+    //保存
+    function save() {
+        // 验证表单
+        if (!$("#addForm").validate().form()) {
+            return false;
+        }
+        var vname = $('#name').val();
+        var vorderNo = $('#orderNo').val();
+        var vparentId = $(grid_selector).jqGrid("getGridParam", "selrow");
+        var rowData = $(grid_selector).jqGrid('getRowData', vparentId);
+        var vlayer = rowData.layer;
+        var vDeptId = $('#deptId').val();
+
+        if (Zx.isEmpty(vDeptId)) {
+            var saveUrl = "/admin/saveDept";
+        } else {
+            var saveUrl = "/admin/updateDept";
+        }
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                Zx.post({
+                    url: saveUrl,
+                    loading: true,
+                    data: {name: vname, orderNo: vorderNo, parentId: vparentId, layer: vlayer, deptId: vDeptId},
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('保存成功');
+                            $("#modal-form").modal("toggle");
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+
+    }
+
+    // 删除
+    function rowDel(id) {
+        if (Zx.isEmpty(id)) {
+            Zx.msg("请选择要删除的行");
+            return false;
+        }
+        var row = $(grid_selector).jqGrid('getRowData', id);
+        var parentId = row.parentId;
+
+        layer.confirm('您确定要删除该条记录吗？', {
+            btn: ['确定删除', '我再想想',]
+        }, function () {
+            Zx.post({
+                url: "/admin/delDept",
+                loading: true,
+                data: {deptId: id, parentId: parentId},
+                success: function (data) {
+                    if (data.code == 0) {
+                        Zx.msg('删除成功');
+                        jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                    } else if (data.code == 1) {
+                        Zx.msg(data.message);
+                    }
+                }
+            });
+        }, function () {
+
+        });
+    }
+
+
+</script>
+
+
+</@defaultLayout.layout>
+
+
+
+

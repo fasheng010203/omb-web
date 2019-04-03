@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.company.UserRankMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.company.UserRank" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="rank_name" property="rankName" jdbcType="TINYINT" />
+    <result column="min_points" property="minPoints" jdbcType="INTEGER" />
+    <result column="max_points" property="maxPoints" jdbcType="INTEGER" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rank_name, min_points, max_points, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_rank
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user_rank
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.company.UserRank" >
+    insert into user_rank ( rank_name, min_points, 
+      max_points, gmt_create, gmt_modified
+      )
+    values (#{id,jdbcType=BIGINT}, #{rankName,jdbcType=TINYINT}, #{minPoints,jdbcType=INTEGER}, 
+      #{maxPoints,jdbcType=INTEGER}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.company.UserRank" >
+    insert into user_rank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rankName != null" >
+        rank_name,
+      </if>
+      <if test="minPoints != null" >
+        min_points,
+      </if>
+      <if test="maxPoints != null" >
+        max_points,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="rankName != null" >
+        #{rankName,jdbcType=TINYINT},
+      </if>
+      <if test="minPoints != null" >
+        #{minPoints,jdbcType=INTEGER},
+      </if>
+      <if test="maxPoints != null" >
+        #{maxPoints,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.company.UserRank" >
+    update user_rank
+    <set >
+      <if test="rankName != null" >
+        rank_name = #{rankName,jdbcType=TINYINT},
+      </if>
+      <if test="minPoints != null" >
+        min_points = #{minPoints,jdbcType=INTEGER},
+      </if>
+      <if test="maxPoints != null" >
+        max_points = #{maxPoints,jdbcType=INTEGER},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.company.UserRank" >
+    update user_rank
+    set rank_name = #{rankName,jdbcType=TINYINT},
+      min_points = #{minPoints,jdbcType=INTEGER},
+      max_points = #{maxPoints,jdbcType=INTEGER},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,665 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+
+<link rel="stylesheet" type="text/css" href="/static/easyui/bootstrap/tree.css">
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js"></script>
+
+
+<div class="main-content-inner">
+
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+
+            <li>
+                <a href="#">权限管理</a>
+            </li>
+            <li class="active">用户管理</li>
+        </ul><!-- /.breadcrumb -->
+
+    </div>
+
+
+
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-xs-12">
+                <form id="search_form">
+                    <div class="col-xs-2">
+                        <input id="userName" name="userName" type="text" placeholder="请输入登录名称" class="form-control">
+                    </div>
+                    <div class="col-xs-2">
+                        <select id="status" name="status" class="selectpicker show-tick form-control" data-live-search="true">
+                            <option value="">== 请选择状态 ==</option>
+                            <option value="0">锁定</option>
+                            <option value="1">正常</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="input-daterange input-group">
+                            <input class="form-control" name="beginDate" type="text" placeholder="开始时间">
+                            <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                            <input class="form-control" name="endDate" type="text" placeholder="结束时间">
+                        </div>
+                    </div>
+                    <div class="col-xs-1 wizard-actions">
+                        <button onclick="search('/admin/getUserList','grid-table')" class="btn btn-purple btn-sm wizard-actions"
+                                type="button">
+                            <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                            查询
+                        </button>
+                    </div>
+                    <div class="col-xs-1 wizard-actions">
+                        <button onclick="clearSearch();" class="btn btn-purple btn-sm wizard-actions" type="reset">
+                            <span class="ace-icon fa fa-undo icon-on-right bigger-110"></span>
+                            重置
+                        </button>
+                    </div>
+                </form>
+                <br/>
+                <hr/>
+            </div><!-- /.col -->
+            <div class="col-sm-3">
+                <div class="widget-box widget-color-blue2">
+                    <div class="widget-header">
+                        <h4 class="widget-title lighter smaller">所属组织机构</h4>
+                    </div>
+                    <div class="widget-body">
+                        <ul id="tts" class="easyui-tree"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <div class="widget-box widget-color-blue2">
+                    <div class="widget-header">
+                        <h4 class="widget-title lighter smaller">
+                            用户列表
+                        </h4>
+                    </div>
+                    <div class="widget-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div id="grid-pager"></div>
+                                <table id="grid-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="modal-form" class="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 id="modal_title" class="blue bigger">新增用户</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="get">
+                            <input type="hidden" id="id" name="id">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">登录名称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="loginName" id="loginName" class="col-xs-12 col-sm-6" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">真实姓名:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="realName" id="realName" class="col-xs-12 col-sm-6" required/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">所属部门:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <ul id="tt" class="easyui-tree"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">联系手机号码:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text" name="mobile" id="mobile" class="col-xs-12 col-sm-6"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">密码:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="password" name="password" id="password" class="col-xs-12 col-sm-6"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-2"></div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">性别:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div>
+                                        <label class="line-height-1 blue">
+                                            <input name="sex" value="1" type="radio" checked class="ace"/>
+                                            <span class="lbl">男</span>
+                                        </label>
+                                        <label class="line-height-1 blue">
+                                            <input name="sex" value="0" type="radio" class="ace"/>
+                                            <span class="lbl">女</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+
+                <button onclick="save();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-role" class="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 id="modal_role_title" class="blue bigger">赋角色</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="roleForm" method="get">
+                            <input id="userId" type="hidden">
+                            <div class="form-group">
+                                <div id="div_roles" class="col-xs-12 col-sm-12">
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+                <button onclick="saveRole();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    //初始化查询条件日历控件
+    $('.input-daterange').datepicker({
+        autoclose: true,
+        language: 'cn',
+        format: 'yyyy-mm-dd',
+        todayBtn: 'linked',
+        todayHighlight: true,
+    })
+
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+
+
+    $('#tts').tree({
+        url: "/admin/getDeptTreeList",
+        checkbox: false,
+        method: 'post',
+        onLoadSuccess: function () {
+            var rootNode = $("#tts").tree('getRoot');
+            $("#tts").tree('expandAll', rootNode.target);
+        },
+        onClick: function (node) {
+            var strPrms = "deptId=" + node.id ;
+            jQuery(grid_selector).jqGrid('setGridParam', {
+                url: "/admin/getUserList?" + strPrms,
+                page: 1
+            }).trigger("reloadGrid");
+        }
+    });
+
+    $('#tt').tree({
+        url: "/admin/getDeptTreeList",
+        checkbox: false,
+        method: 'post',
+        onDblClick: function (node) {
+            $('#tt').tree('collapse', node.target);
+        }
+    });
+
+    $(window).on('resize.jqGrid', function () {
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    });
+
+    // 初始化grid
+    var dgData;
+    jQuery(grid_selector).jqGrid({
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: pager_selector,
+        viewrecords: true,
+        datatype: "json",
+        url: '/admin/getUserList',
+        colModel: [
+            {name: 'action', index: '', label: '操作', width: 150, fixed: false, sortable: false, resize: true, formatter: acFormat},
+            {name: 'id', index: 'id', label: '用户id', width: 60, sorttype: "int", hidden: true},
+            {name: 'loginName', index: 'login_name', label: '登录名称', width: 150},
+            {name: 'realName', index: 'real_name', label: '真实姓名', width: 140},
+            {name: 'deptName', label: '所属部门', width: 140, sortable: false},
+            {name: 'sex', index: 'sex', label: '性别', width: 50, sorttype: "int", formatter: sexFormat},
+            {name: 'mobile', index: 'mobile', label: '联系手机号码', width: 150, sortable: false},
+            {name: 'status', index: 'status', label: '状态', width: 100, sorttype: 'int', formatter: statusFormat},
+            {name: 'gmtCreate', index: 'gmt_create', label: '创建时间', width: 150, sorttype: 'date'}
+        ],
+        loadComplete: function (data) {
+            var table = this;
+            dgData = data.rows;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+    $(window).triggerHandler('resize.jqGrid');
+
+    //grid navButtons
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+    $(function () {
+        <@shiro.hasPermission name="${add}">
+            jQuery(grid_selector).navButtonAdd(pager_selector, {
+                caption: "",
+                position: "last",
+                buttonicon: "ace-icon fa fa-plus-circle purple",
+                onClickButton: function () {
+                    //清空
+                    clearAddForm('#addForm');
+                    $('#loginName').prop('readonly', false);
+                    $('#tt').tree('reload');
+                    //打开 modal
+                    $('#modal-form').modal();
+                }
+            });
+        </@shiro.hasPermission>
+    });
+
+    //操作按钮format
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        var actionHtml = "<div class=\"hidden-sm hidden-xs btn-group\">";
+        var btnEdit = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEdit(" + id + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-pencil bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnDelete = "<@shiro.hasPermission name='${del}'><button onclick='javascript:rowDel(" + id + ");' class=\"btn btn-xs btn-danger\"><i class=\"ace-icon fa fa-trash-o bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnLock = "<@shiro.hasPermission name='${lock}'><button onclick='javascript:rowLock(" + id + ");' class=\"btn btn-xs btn-warning\"><i class=\"ace-icon fa fa-lock white bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnUnLock = "<@shiro.hasPermission name='${unlock}'><button onclick='javascript:rowUnlock(" + id + ");' class=\"btn btn-xs btn-purple\"><i class=\"ace-icon fa fa-unlock bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnRole = "<@shiro.hasPermission name='${role}'><button onclick='javascript:rowRole(" + id + ");' class=\"btn btn-xs btn-primary\"><i class=\"ace-icon fa fa-users bigger-110\"></i></button></@shiro.hasPermission>";
+
+        var btnCity = "<button onclick='javascript:addResc(" + id + ");' class=\"btn btn-xs btn-primary\"><i class=\"ace-icon fa fa-cogs bigger-110\"></i></button>";
+
+
+        actionHtml += btnEdit + btnDelete;
+        if (rowObject.status == 1) {
+            actionHtml += btnLock;
+        } else if (rowObject.status == 0) {
+            actionHtml += btnUnLock;
+        }
+        actionHtml += btnRole;
+        actionHtml += btnCity;
+        actionHtml += "</div>";
+        return actionHtml;
+    }
+
+    function addResc(id) {
+        // 默认最大化，否则 layer.open
+        layer.full(
+            layer.open({
+                type: 2,
+                title: '区域管理分配',
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['800px', '400px'],
+                content: '/admin/admincity?userId=' + id,
+                end: function () {
+                    //刷新父页面
+                    // location.reload();
+                }
+            })
+        );
+    }
+
+    // 状态format
+    function statusFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.status == 1) {
+            result = "<span class=\"label label-sm label-success\">正常</span>";
+        } else if (rowObject.status == 0) {
+            result = "<span class=\"label label-sm label-danger\">锁定</span>";
+        } else {
+            result = "<span class=\"label label-sm label-grey\">未知状态</span>";
+        }
+        return result;
+    }
+
+
+    // 编辑
+    function rowEdit(id) {
+        var rowData = getGridRowData(dgData, id)
+
+        $('#modal_title').html("修改用户");
+        $('#modal-form').modal();
+        //填充表单
+        $.setForm('#addForm', rowData);
+        // tree 设置选中项
+        var node = $('#tt').tree('find', rowData.deptId);
+        $('#tt').tree('select', node.target);
+        //清除 Validation 验证信息
+        $("#addForm").validate().resetForm();
+        // 移除密码验证 rules
+        $("#password").rules("remove");
+        $('#loginName').prop('readonly', true);
+    }
+
+    //删除
+    function rowDel(id) {
+        if (Zx.isEmpty(id)) {
+            Zx.msg("请选择要删除的行");
+            return false;
+        }
+        layer.confirm('您确定要删除该条记录吗？', {
+            btn: ['确定删除', '我再想想',]
+        }, function () {
+            Zx.post({
+                url: "/admin/deleteUser",
+                loading: true,
+                data: {
+                    userId: id,
+                },
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg('删除成功');
+                        $('#grid-table').trigger("reloadGrid");
+                    } else if (data.code == 1) {
+                        Zx.msg(data.message);
+                    }
+                }
+            });
+        }, function () {
+
+        });
+    }
+
+    // 锁定
+    function rowLock(id) {
+        layer.confirm('您确定要锁定该用户吗？', {
+            btn: ['确定', '取消',]
+        }, function () {
+            Zx.post({
+                url: "/admin/lockUser",
+                loading: true,
+                data: {
+                    userId: id,
+                    status: '0'
+                },
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg('锁定成功');
+                        $('#grid-table').trigger("reloadGrid");
+                    } else if (data.code == 1) {
+                        Zx.msg(data.message);
+                    }
+                }
+            });
+        }, function () {
+        });
+        jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+    }
+
+    // 解锁
+    function rowUnlock(id) {
+        layer.confirm('您确定要解锁该用户吗？', {
+            btn: ['确定', '取消',]
+        }, function () {
+            Zx.post({
+                url: "/admin/lockUser",
+                loading: true,
+                data: {
+                    userId: id,
+                    status: '1'
+                },
+                success: function (data) {
+                    if (data.code == 0) {
+                        layer.msg('解锁成功');
+                        $('#grid-table').trigger("reloadGrid");
+                    } else if (data.code == 1) {
+                        Zx.msg(data.message);
+                    }
+                }
+            });
+        }, function () {
+
+        });
+        jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+
+    }
+
+    function rowRole(id) {
+        Zx.post({
+            url: "/admin/getUserRoleList",
+            loading: true,
+            async: true,
+            data: {
+                userId: id,
+            },
+            success: function (data) {
+                if (!Zx.isEmpty(data)) {
+                    var html = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var chkboxHtml = " <label>";
+                        if (data[i].checked == 1) {
+                            chkboxHtml += " <input name='role' value='" + data[i].roleId + "' type='checkbox' checked='checked' class='ace'/>";
+                        } else {
+                            chkboxHtml += " <input name='role' value='" + data[i].roleId + "' type='checkbox'  class='ace'/>";
+                        }
+                        chkboxHtml += "  <span class='lbl'>&nbsp;" + data[i].roleName + "</span></label>";
+                        html += chkboxHtml;
+                    }
+                    $('#div_roles').html(html);
+                }
+            }
+        });
+
+        $('#userId').val(id);
+        $('#modal-role').modal();
+
+    }
+
+
+    // 表单验证
+    $('#addForm').validate({
+        errorElement: 'div',
+        errorClass: 'help-block',
+        rules: {
+            loginName: {
+                required: true,
+                isPhone: true
+            }, password: {
+                required: true,
+                isPwd: false
+            }, mobile: {
+                required: false,
+                isPhone: true
+            }
+        },
+        highlight: function (e) {
+            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        },
+        success: function (e) {
+            $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info')
+            $(e).remove();
+        },
+        errorPlacement: function (error, element) {
+            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                var controls = element.closest('div[class*="col-"]');
+                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+            }
+            else error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+        },
+        invalidHandler: function (form) {
+        }
+    });
+
+    //保存用户
+    function save() {
+        // 验证表单
+        if (!$("#addForm").validate().form()) {
+            return false;
+        }
+        var vloginName = $('#loginName').val();
+        var vrealName = $('#realName').val();
+        var vmobile = $('#mobile').val();
+        var vpwd = $('#password').val();
+        var vsex = $("input[name='sex']:checked").val();
+        var vuserId = $('#id').val();
+
+        if (Zx.isEmpty(vuserId)) {
+            var saveUrl = "/admin/saveUser";
+            if (Zx.isEmpty(vpwd)) {
+                Zx.msg('密码不能为空');
+            }
+        } else {
+            var saveUrl = "/admin/updateUser";
+        }
+        var deptId = $('#tt').tree('getSelected').id;
+
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                Zx.post({
+                    url: saveUrl,
+                    loading: true,
+                    data: {
+                        loginName: vloginName,
+                        realName: vrealName,
+                        mobile: vmobile,
+                        password: vpwd,
+                        sex: vsex,
+                        userId: vuserId,
+                        deptId: deptId
+                    },
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('保存成功');
+                            $("#modal-form").modal("toggle");
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+
+    }
+
+    //保存角色
+    function saveRole() {
+        var roleIds = "";
+        $('input[name="role"]:checked').each(function () {
+            if (roleIds != "") {
+                roleIds += "," + $(this).val();
+            } else {
+                roleIds += $(this).val();
+            }
+        });
+        if (Zx.isEmpty(roleIds)) {
+            Zx.msg("至少选择一个角色");
+            return false;
+        }
+        var vuserId = $('#userId').val();
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                Zx.post({
+                    url: '/admin/saveUserRoles',
+                    loading: true,
+                    data: {
+                        userId: vuserId,
+                        roleIds: roleIds
+                    },
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('保存成功');
+                            $("#modal-role").modal("toggle");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+
+
+    }
+
+</script>
+
+</@defaultLayout.layout>
+

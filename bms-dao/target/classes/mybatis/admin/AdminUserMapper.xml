@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.admin.AdminUserMapper">
+    <resultMap id="BaseResultMap" type="com.onemile.bms.entity.admin.AdminUser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="mch_id" property="mchId" jdbcType="BIGINT"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="is_delete" property="isDelete" jdbcType="TINYINT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
+        <result column="oper_code" property="operCode" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, mch_id, login_name, login_pwd, real_name, status, is_delete, mobile, email, dept_id,
+    oper_code, sex, address, gmt_create, gmt_modified
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from admin_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.onemile.bms.entity.admin.AdminUser">
+        insert into admin_user ( mch_id, login_name,
+        login_pwd, real_name, status,
+        is_delete, mobile, email,
+        dept_id, oper_code, sex,
+        address, gmt_create, gmt_modified
+        )
+        values (#{id,jdbcType=BIGINT}, #{mchId,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR},
+        #{loginPwd,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+        #{isDelete,jdbcType=TINYINT}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+        #{deptId,jdbcType=INTEGER}, #{operCode,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR},
+        #{address,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+        );
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <insert id="insertSelective" parameterType="com.onemile.bms.entity.admin.AdminUser">
+        insert into admin_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="mchId != null">
+                mch_id,
+            </if>
+            <if test="loginName != null">
+                login_name,
+            </if>
+            <if test="loginPwd != null">
+                login_pwd,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="operCode != null">
+                oper_code,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="mchId != null">
+                #{mchId,jdbcType=BIGINT},
+            </if>
+            <if test="loginName != null">
+                #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPwd != null">
+                #{loginPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="operCode != null">
+                #{operCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=CHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+
+        <selectKey resultType="long" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.admin.AdminUser">
+        update admin_user
+        <set>
+            <if test="mchId != null">
+                mch_id = #{mchId,jdbcType=BIGINT},
+            </if>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPwd != null">
+                login_pwd = #{loginPwd,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isDelete != null">
+                is_delete = #{isDelete,jdbcType=TINYINT},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="operCode != null">
+                oper_code = #{operCode,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=CHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.admin.AdminUser">
+    update admin_user
+    set mch_id = #{mchId,jdbcType=BIGINT},
+      login_name = #{loginName,jdbcType=VARCHAR},
+      login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=INTEGER},
+      oper_code = #{operCode,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=CHAR},
+      address = #{address,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+    <!-- 以上是工具自动生成 -->
+    <select id="listPage" resultType="com.onemile.bms.pojo.vo.admin.AdminUserVO" parameterType="map">
+        select
+        u.id ,
+        u.login_name loginName ,
+        u.real_name realName ,
+        u.`status` status ,
+        u.mobile mobile ,
+        u.email email ,
+        u.dept_id deptId ,
+        u.oper_code operCode ,
+        u.sex sex ,
+        u.address address ,
+        u.gmt_create gmtCreate ,
+        u.gmt_modified gmtModified,
+        d.name deptName
+        from admin_user u
+        left join admin_dept d on d.id=u.dept_id
+        where u.is_delete = 0
+        <if test="mchId != null ">
+            and u.mch_id = #{mchId}
+        </if>
+        <if test="userName != null and userName!=''">
+            and u.login_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="status != null">
+            and u.`status` = #{status}
+        </if>
+        <if test="deptIds != null">
+            and u.dept_id in
+            <foreach item="item" index="index" collection="deptIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="roleId != null">
+            and u.id in(SELECT user_id from admin_user_role where role_id=#{roleId})
+        </if>
+        <if test="beginDate != null and beginDate!=''">
+            and <![CDATA[ left(u.gmt_create,10) >=  #{beginDate}  ]]>
+        </if>
+        <if test="endDate != null and endDate!=''">
+            and <![CDATA[ left(u.gmt_create,10) <=  #{endDate}  ]]>
+        </if>
+        order  by  u.gmt_create DESC
+    </select>
+
+    <select id="selectByLoginName" resultMap="BaseResultMap" parameterType="String">
+        select
+        <include refid="Base_Column_List"/>
+        from admin_user
+        where is_delete=0 and login_name = #{loginName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="countByDept" parameterType="int" resultType="int">
+        select count(*) from admin_user where dept_id = #{deptId}
+    </select>
+
+
+    <select id="listUserRole" resultType="com.onemile.bms.pojo.vo.admin.AdminUserRoleVO">
+        SELECT
+            a.id roleId ,
+            a.`name` roleName ,
+            CASE
+        WHEN b.id IS NOT NULL THEN
+            1
+        ELSE
+            0
+        END checked
+        FROM
+            admin_role a
+        LEFT JOIN admin_user_role b ON b.role_id = a.id  and  b.user_id = #{userId}
+        where  a.mch_id = #{mchId} or a.id = 2
+    </select>
+
+
+
+    <select id="getAdminUserVO" resultType="com.onemile.bms.pojo.vo.admin.AdminUserVO" parameterType="String">
+       SELECT
+            t.id id,
+            t.mch_id mchId,
+            '枝星集团' mchName,
+            t.login_name loginName,
+            t.login_pwd loginPwd,
+            t.real_name realName,
+            t. STATUS STATUS,
+            t.is_delete isDelete,
+            t.mobile mobile,
+            t.email email,
+            t.dept_id deptId,
+            t.oper_code operCode,
+            t.sex sex,
+            t.address address,
+            t.gmt_create gmtCreate,
+            t.gmt_modified gmtModified
+        FROM
+            admin_user t
+        where t.is_delete=0 and login_name = #{loginName,jdbcType=VARCHAR}
+    </select>
+
+
+
+    <select id="selectUserByPwd" resultType="com.onemile.bms.entity.admin.AdminUser">
+        SELECT
+            t.id id,
+            '100000' mchId,
+            t.login_name loginName,
+            t.login_pwd loginPwd,
+            t.real_name realName,
+            t. STATUS STATUS,
+            t.is_delete isDelete,
+            t.mobile mobile,
+            t.email email,
+            t.dept_id deptId,
+            t.oper_code operCode,
+            t.sex sex,
+            t.address address,
+            t.gmt_create gmtCreate,
+            t.gmt_modified gmtModified
+        FROM
+            admin_user t
+        where  t.id=#{userId} and t.login_pwd=#{oldLoginPwd}
+    </select>
+</mapper>

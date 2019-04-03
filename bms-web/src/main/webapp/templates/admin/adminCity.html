@@ -1,0 +1,301 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+<link rel="stylesheet" type="text/css" href="/static/easyui/bootstrap/tree.css">
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js"></script>
+
+<div class="main-content-inner">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <br/>
+                <hr/>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="widget-box widget-color-blue2">
+                            <div class="widget-header">
+                                <h4 class="widget-title lighter smaller">省份信息</h4>
+                            </div>
+
+                            <div class="widget-body">
+                                <div class="widget-main padding-8">
+                                    <ul id="ttMenu" class="easyui-tree"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <input name="userId" id="userId" type="hidden" value="${userId}">
+                        <div class="widget-box widget-color-blue2">
+                            <div class="widget-header">
+                                <h4 class="widget-title lighter smaller">城市信息</h4>
+                            </div>
+                            <div class="widget-body">
+                                <div id="grid-pager"></div>
+                                <table id="grid-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+    var parent_column = $(grid_selector).closest('[class*="col-"]');
+
+    //resize to fit page size
+    $(window).on('resize.jqGrid', function () {
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    })
+
+    //resize on sidebar collapse/expand
+    $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+        if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+            //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+            setTimeout(function () {
+                $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+            }, 20);
+        }
+    })
+    //
+    //
+    // 初始化grid
+    jQuery(grid_selector).jqGrid({
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: pager_selector,
+        viewrecords: true,
+        datatype: "json",
+        url: "/admin/getBaseCityList?userId=${userId}",
+        colNames: ['ID','UserId','城市名称','是否启用管理' ],
+        colModel: [
+
+            {name: 'id',index: 'id', width: 60, sorttype: "int", hidden: true},
+            {name: 'userId', index: 'userId', width: 60,  hidden: true},
+            {name: 'name', index: 'name', width: 150},
+            {name: 'action', index: '', width: 200, fixed: false, sortable: false, resize: true, formatter: openFormat, align: "center"},
+
+
+        ],
+
+        loadComplete: function () {
+            var table = this;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    //trigger window resize to make the grid get the correct size
+    $(window).triggerHandler('resize.jqGrid');
+
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+
+
+
+    //openformat
+    function openFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId;
+        var actionHtml = "<div class=\"btn-group\">";
+        var btnDelete;
+        var status=rowObject.userId;
+         if (status == "" ||status == null) {
+             btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange" + id + "\"   onchange='javascript:save(" + id + ")'  name=\"ischange\" class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"></span> </@shiro.hasPermission>";
+        } else {
+             btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange" + id + "\"   onchange='javascript:save(" + id + ")' checked=\"true\"  name=\"ischange\" class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"></span> </@shiro.hasPermission>";
+         }
+        actionHtml += btnDelete;
+        actionHtml += "</div>";
+        return actionHtml;
+    }
+
+    // 关闭layer 层
+    function closely() {
+        //获取窗口索引
+        var index = parent.layer.getFrameIndex(window.name);
+        parent.layer.close(index);
+    }
+    //
+    // $('#ttMenu').tree({
+    //     url: "/admin/getCityTree",
+    //     checkbox: true,
+    //     method: 'post',
+    //     onCheck: function (node, checked) {
+    //         getChecked();
+    //     },
+    //     onLoadSuccess: function (node, data) {
+    //         getChecked();
+    //     }
+    // });
+
+
+    $('#ttMenu').tree({
+        url: "/admin/getCityTree",
+        method: 'post',
+        onClick: function (node) {
+
+            $('#ttMenu').tree('expand', node.target);
+
+            var parentNode = $('#ttMenu').tree('getParent', node.target);
+
+            // 如果是一级节点，远程加载子节点
+            // 加载类别下的物资项目信息
+
+            $('#ttMenu').tree('expand', node.target);
+            // 如果是二级节点，给datagrid赋值
+            var url = "/admin/getBaseCityList?parentId=" + node.id +"&&userId=${userId}";
+
+            jQuery(grid_selector).jqGrid('setGridParam', {
+                url: url,
+                page: 1
+            }).trigger("reloadGrid");
+
+
+        },
+        onDblClick: function (node) {
+            $('#ttMenu').tree('collapse', node.target);
+        }
+    });
+
+
+
+
+
+    // 配置
+    function getChecked() {
+        var nodes = $('#ttMenu').tree('getChecked', ['checked', 'indeterminate']);
+        var htmlBody = "";
+        var ids = "";
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].id != 1) {
+                if (ids != "") {
+                    ids += "," + nodes[i].id;
+                } else {
+                    ids += nodes[i].id;
+                }
+            }
+        }
+        // 查询选中菜单的操作及按钮
+        var itemsList = getActionItmes(ids);
+
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].id != 1) {
+
+                var nbsp = "";
+                for (var k = 1; k <= 10; k++) {
+                    if (k <= nodes[i].attributes.layer) {
+                        nbsp += "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    }
+                }
+                if (nodes[i].children != null && nodes[i].children != "") {
+                    htmlBody += "<tr id='curd_" + nodes[i].id + "'>"
+                        + "<td>" + nbsp + nodes[i].text
+                        + "</td><td>";
+                } else {
+                    htmlBody += "<tr id='curd_" + nodes[i].id + "'>"
+                        + "<td>" + nbsp + nodes[i].text
+                        + "</td><td>";
+                }
+
+                htmlBody += "<input type='checkbox' value='0' onclick='checkAll(" + nodes[i].id + ",this.checked)'  name='item_checkAll_" + nodes[i].id + "' /> 全选</td><td>";
+
+                //input name 命名规则： item + menuid + actionid;
+                var k = 0;
+                for (var j = 0; j < itemsList.length; j++) {
+                    if (nodes[i].id == itemsList[j].pid) { 	//
+                        k++;
+                        if (itemsList[j].checked != '') {
+                            htmlBody += "<input type='checkbox' checked='checked' value='" + itemsList[j].id + "'  name='item_" + nodes[i].id + "_" + itemsList[j].id + "' />" + itemsList[j].name;
+                        } else {
+                            htmlBody += "<input type='checkbox' value='" + itemsList[j].id + "'  name='item_" + nodes[i].id + "_" + itemsList[j].id + "' />" + itemsList[j].name;
+                        }
+                        if (k % 6 == 0) {
+                            htmlBody += "<br/>";
+                        }
+                    }
+                }
+                htmlBody += "</td></tr>";
+            }
+        }
+
+        $("#actionItmesTable tbody").html(htmlBody);
+
+    }
+
+
+
+
+    function save(id) {
+        var arrChk = $("#ischange" + id + "").is(':checked');
+        var userId="${userId}"
+
+        if (arrChk) {
+            $.post('/admin/saveAdminCity', {
+                userid: userId,
+                usercity: id
+            }, function (result) {
+                if (result.success) {
+                    Zx.msg("启用成功");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+        } else {
+
+            $.post('/admin/delAdminCity', {
+                userid: userId,
+                usercity: id
+            }, function (result) {
+                if (result.success) {
+                    Zx.msg("操作成功");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+
+
+
+
+        }
+
+
+
+
+
+
+
+        //  alert(rowIndex);
+    }
+
+
+
+
+
+
+
+
+</script>
+
+</@defaultLayout.layout>
+

@@ -1,0 +1,460 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+
+<link rel="stylesheet" type="text/css" href="/static/easyui/bootstrap/tree.css">
+<script type="text/javascript" src="/static/easyui/jquery.easyui.min.js"></script>
+
+
+<div class="main-content-inner">
+
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+
+            <li>
+                <a href="#">权限管理</a>
+            </li>
+            <li class="active">菜单资源管理</li>
+        </ul><!-- /.breadcrumb -->
+
+    </div>
+
+
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="widget-box widget-color-blue2">
+                            <div class="widget-header">
+                                <h4 class="widget-title lighter smaller">菜单资源</h4>
+                            </div>
+                            <div class="widget-body">
+                                <div class="widget-main padding-4">
+                                    <ul id="tt" class="easyui-tree"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="widget-box widget-color-blue2">
+                            <div class="widget-header">
+                                <h4 class="widget-title lighter smaller">子资源列表</h4>
+                            </div>
+                            <div class="widget-body">
+                                <div id="grid-pager"></div>
+                                <table id="grid-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div>
+
+
+<div id="modal-form" class="modal" aria-hidden="true" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 id="modal_title" class="blue bigger">新增资源</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="get">
+                            <input id="layer" name="layer" type="hidden">
+                            <input id="action" name="action" type="hidden">
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">资源编号:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="id" id="id" class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">资源编码:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="code" id="code" placeholder="大写字母、数字、下划线组成，且不能数字打头"
+                                               class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">资源名称:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="name" id="name" class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">菜单类型:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <select name="type" id="type" class="col-xs-12 col-sm-12">
+                                            <option value="1">菜单</option>
+                                            <option value="2">操作按钮</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">菜单排序:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="orderNo" id="orderNo" class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">叶子菜单:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input name="menuLeafFlag" id="menuLeafFlag" value="1" class="ace ace-switch ace-switch-4 btn-flat"
+                                               type="checkbox"/>
+                                        <span class="lbl"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">菜单URL:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="menuLeafUrl" id="menuLeafUrl" class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">菜单ICON:</label>
+                                <div class="col-xs-12 col-sm-4">
+                                    <div class="clearfix">
+                                        <input type="text" name="icon" id="icon" class="col-xs-12 col-sm-12"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-2 no-padding-right">超级菜单:</label>
+                                <div class="col-xs-12 col-sm-10">
+                                    <div class="clearfix">
+                                        <input name="isSuper" id="isSuper" value="1" class="ace ace-switch ace-switch-4 btn-flat"
+                                               type="checkbox"/>
+                                        <span class="lbl"></span> 超级管理才能看到的的菜单
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+
+                <button onclick="save();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="application/javascript">
+
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+
+
+    var nodeId;
+    $('#tt').tree({
+        url: "/admin/getRecTreeList",
+        checkbox: false,
+        method: 'post',
+        onSelect: function (node) {
+            var strPrms = "pid=" + node.id;
+            nodeId = node.id;
+            jQuery(grid_selector).jqGrid('setGridParam', {
+                url: "/admin/getRescourceList?" + strPrms
+            }).trigger("reloadGrid");
+        },
+        onLoadSuccess(data) {
+            if (nodeId != null) {
+                var node = $('#tt').tree('find', nodeId);
+                $('#tt').tree('expandTo', node.target).tree('select', node.target);
+            }
+        }
+
+    });
+
+    //resize to fit page size
+    $(window).on('resize.jqGrid', function () {
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    })
+
+    // 初始化grid
+    var dgData;
+    jQuery(grid_selector).jqGrid({
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        viewrecords: false,
+        pgbuttons: false,
+        pginput: false,
+        pager: pager_selector,
+        datatype: "json",
+        url: '/admin/getRescourceList',
+        colModel: [
+            {name: 'action', index: '', label: '操作', width: 70, fixed: false, sortable: false, resize: true, formatter: acFormat},
+            {name: 'id', index: 'id', label: '资源编号', width: 100, sorttype: "int", hidden: false},
+            {name: 'code', index: 'code', label: '编码', width: 200, sorttype: "int", hidden: false},
+            {name: 'pid', index: 'pid', label: '父id', width: 60, sortable: false, hidden: true},
+            {name: 'name', index: 'name', label: '资源名称', width: 150},
+            {name: 'menuLeafUrl', index: 'menu_leaf_url', label: '资源url', width: 150},
+            {name: 'orderNo', index: 'order_no', label: '排序', width: 80, sorttype: "int"},
+            {name: 'type', index: 'type', label: '类型', width: 80, sortable: false,hidden:true},
+            {name: 'menuLeafFlag', index: 'menu_leaf_flag', label: '叶子菜单', width: 80, sortable: false,hidden:true},
+            // {name: 'orderNo', index: 'order_no', label: '排序', width: 80, sorttype: "int"},
+            {name: 'gmtCreate', index: 'gmt_create', label: '创建时间', width: 150, sorttype: 'date'}
+        ],
+        loadComplete: function (data) {
+            var table = this;
+            dgData = data.rows;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    //trigger window resize to make the grid get the correct size
+    $(window).triggerHandler('resize.jqGrid');
+
+    //grid navButtons
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        });
+    $(function () {
+      <@shiro.hasPermission name = "${add}" >
+            jQuery(grid_selector).navButtonAdd(pager_selector, {
+                caption: "",
+                position: "last",
+                buttonicon: "ace-icon fa fa-plus-circle purple",
+                onClickButton: function () {
+                    var node = $('#tt').tree('getSelected');
+                    if (Zx.isEmpty(node)) {
+                        Zx.msg('请选择所属资源菜单');
+                        return false;
+                    }
+                    clearAddForm();
+                    Zx.post({
+                        url: "/admin/getRecMaxId",
+                        loading: false,
+                        data: {
+                            pid: node.id,
+                        },
+                        success: function (data) {
+                            if (data.code == 0) {
+                                var pid;
+                                if (Zx.isEmpty(data.data)) {
+                                    pid = node.id + "01";
+                                } else {
+                                    pid = data.data + 1;
+                                }
+                                $('#id').val(pid);
+                            } else if (data.code == 1) {
+                                Zx.msg(data.message);
+                            }
+                        }
+                    });
+                    $("#menuLeafFlag").attr("checked", false);
+                    $("#isSuper").attr("checked", false);
+                    $('#layer').val(node.attributes.layer + 1);
+                    $('#action').val(1);
+                    $('#id').prop('readonly', true);
+                    $('#code').prop('readonly', false);
+                    $('#modal_title').html("新增资源");
+                    $('#modal-form').modal();
+                }
+            });
+      </@shiro.hasPermission>
+    });
+
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        var actionHtml = "<div class=\"hidden-sm hidden-xs btn-group\">";
+        var btnEdit = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEdit(" + id + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-pencil bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnDelete = "<@shiro.hasPermission name='${del}'><button onclick='javascript:rowDel(" + id + ");' class=\"btn btn-xs btn-danger\"><i class=\"ace-icon fa fa-trash-o bigger-110\"></i></button></@shiro.hasPermission>";
+        actionHtml += btnEdit + btnDelete;
+        actionHtml += "</div>";
+        return actionHtml;
+    }
+
+    function rowEdit(id) {
+
+        var rowData = getGridRowData(dgData, id)
+
+        $('#modal_title').html("修改资源");
+        $('#modal-form').modal();
+
+        $("#menuLeafFlag").attr("checked", false);
+        $("#isSuper").attr("checked", false);
+
+        //填充表单
+        $.setForm('#addForm', rowData);
+
+        $('#action').val(2);
+        $('#id').prop('readonly', true);
+        $('#code').prop('readonly', true);
+        //清除 Validation 验证信息
+        $("#addForm").validate().resetForm();
+
+    }
+
+    function rowDel(id) {
+        var rowData = $(grid_selector).jqGrid('getRowData', id);
+        if (rowData.type == "1" && rowData.menuLeafFlag == "0") {
+            Zx.msg('不能删除包含子菜单的菜单');
+            return false;
+        }
+        layer.confirm('确定要删除吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                $.ajax({
+                    url: '/admin/deteleResource',
+                    loading: true,
+                    data: {id: rowData.id, type: rowData.type, menuLeafFlag: rowData.menuLeafFlag},
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('删除成功');
+                            // 重载树
+                            $('#tt').tree('reload');
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+            }
+        );
+    }
+
+    // 表单验证
+    $('#addForm').validate({
+        errorElement: 'div',
+        errorClass: 'help-block',
+        rules: {
+            id: {
+                required: true
+            },
+            code: {
+                required: true
+            },
+            name: {
+                required: true
+            },
+            type: {
+                required: true
+            },
+            orderNo: {
+                required: true,
+                digits: true
+            }
+
+        },
+        highlight: function (e) {
+            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        },
+        success: function (e) {
+            $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info')
+            $(e).remove();
+        },
+        errorPlacement: function (error, element) {
+            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                var controls = element.closest('div[class*="col-"]');
+                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+            }
+            else error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+        },
+        invalidHandler: function (form) {
+        }
+    });
+
+    function save() {
+
+        // 验证表单
+        if (!$("#addForm").validate().form()) {
+            return false;
+        }
+        var vmenuLeafFlag = 0;
+        if ($('#menuLeafFlag').prop('checked') == true) {
+            vmenuLeafFlag = 1;
+        }
+
+        var visSuper = 0;
+        if ($('#isSuper').prop('checked') == true) {
+            visSuper = 1;
+        }
+
+        var vpid = $('#tt').tree('getSelected').id;
+        var formData = new FormData($("#addForm")[0]);
+        formData.append('menuLeafFlag', vmenuLeafFlag);
+        formData.append('isSuper', visSuper);
+        formData.append('pid', vpid);
+
+        var url;
+        if ($('#action').val() == 1) {
+            url = "/admin/saveResource";
+        } else if ($('#action').val() == 2) {
+            url = "/admin/updateResource";
+        }
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == 0) {
+                            Zx.msg('保存成功');
+                            //关闭弹出框
+                            $("#modal-form").modal("toggle");
+                            // 重载树
+                            $('#tt').tree('reload');
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+            }
+        );
+
+    }
+
+
+</script>
+
+</@defaultLayout.layout>
+

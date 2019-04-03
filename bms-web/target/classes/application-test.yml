@@ -1,0 +1,45 @@
+#redis配置
+redis:
+  ip: 127.0.0.1
+  port: 6379
+  maxTotal: 25
+  maxIdle: 50
+  maxWaitMillis: 5000
+  maxTimeout: 3000
+
+#bms数据库连接
+bms:
+  url: jdbc:mysql://127.0.0.1:3306/onemile?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+  username: root
+  password: 123456
+#zxshare数据库连接
+share:
+  url: jdbc:mysql://127.0.0.1:3306/onemile?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+  username: root
+  password: 123456
+
+#shiro 配置
+shiro:
+  sessionTimeout: 1800 # 登录超时时间 单位：秒
+  cachedTimeout: 600 # 权限缓存超时时间 单位：秒
+  cookieMaxAge: 2592000 #记住我的最大时间 单位：秒
+
+#excel ftl 模板存储物理路径
+excel:
+  ftlPath: E:\hzx_work_002\idea\work\lms\trunk\lms-web\src\main\webapp\templates\excel
+  csvPath: /var/local/uploads/
+
+
+#qrcode 存储物理路径
+qrcode:
+  filePath: /eric/tem/deviceqr/
+
+sms:
+   checkCodeUrl: http://localhost:7080/checkcode/getCheckCode.html
+   verifyUrl: http://localhost:7080/checkcode/verifyCheckCode.html
+   sendTempUrl: http://localhost:7080/sms/sendTemp.html
+   sendUrl: http://localhost:7080/checkcode/verifyCheckCode.html
+   pushAliasUrl: http://localhost:7080/push/pushAlias.html
+   pushAliasTempUrl: http://localhost:7080/push/pushAliasTemp.html
+   pushAllUrl: http://localhost:7080/push/pushAll.html
+

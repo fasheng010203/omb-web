@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.base.AppVersionMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.base.AppVersion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="platform" property="platform" jdbcType="TINYINT" />
+    <result column="verison" property="verison" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="is_force_update" property="isForceUpdate" jdbcType="TINYINT" />
+    <result column="down_url" property="downUrl" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, platform, verison, description, is_force_update, down_url, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from app_version
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from app_version
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.base.AppVersion" >
+    insert into app_version ( platform, verison, 
+      description, is_force_update, down_url, 
+      gmt_create, gmt_modified)
+    values ( #{platform,jdbcType=TINYINT}, #{verison,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{isForceUpdate,jdbcType=TINYINT}, #{downUrl,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP});
+		<selectKey resultType="int" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.base.AppVersion" >
+    insert into app_version
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="platform != null" >
+        platform,
+      </if>
+      <if test="verison != null" >
+        verison,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="isForceUpdate != null" >
+        is_force_update,
+      </if>
+      <if test="downUrl != null" >
+        down_url,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="platform != null" >
+        #{platform,jdbcType=TINYINT},
+      </if>
+      <if test="verison != null" >
+        #{verison,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isForceUpdate != null" >
+        #{isForceUpdate,jdbcType=TINYINT},
+      </if>
+      <if test="downUrl != null" >
+        #{downUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="int" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.base.AppVersion" >
+    update app_version
+    <set >
+      <if test="platform != null" >
+        platform = #{platform,jdbcType=TINYINT},
+      </if>
+      <if test="verison != null" >
+        verison = #{verison,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="isForceUpdate != null" >
+        is_force_update = #{isForceUpdate,jdbcType=TINYINT},
+      </if>
+      <if test="downUrl != null" >
+        down_url = #{downUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.base.AppVersion" >
+    update app_version
+    set platform = #{platform,jdbcType=TINYINT},
+      verison = #{verison,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      is_force_update = #{isForceUpdate,jdbcType=TINYINT},
+      down_url = #{downUrl,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="listPage" resultType="com.onemile.bms.pojo.vo.zxshare.base.AppVersionVO">
+
+  SELECT
+		id  id,
+		platform platform,
+		verison verison,
+		description description,
+		is_force_update isForceUpdate,
+		down_url downUrl,
+		gmt_create gmtCreate,
+		gmt_modified gmtModified
+	FROM
+		app_version
+    <where>
+      <if test="verison != null and verison!=''" >
+        and verison =#{verison}
+      </if>
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+    </where>
+    order by gmt_create desc
+  </select>
+
+
+  <select id="findByPlatform" resultType="com.onemile.bms.pojo.vo.zxshare.base.AppVersionVO">
+    SELECT
+    id  id,
+    platform platform,
+    verison verison,
+    description description,
+    is_force_update isForceUpdate,
+    down_url downUrl,
+    gmt_create gmtCreate,
+    gmt_modified gmtModified
+    FROM
+    app_version
+    <where>
+      <if test="platform != null and platform!=''" >
+        and platform =#{platform}
+      </if>
+    </where>
+  </select>
+</mapper>

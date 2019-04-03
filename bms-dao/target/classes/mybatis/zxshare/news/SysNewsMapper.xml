@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.zxshare.news.SysNewsMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.zxshare.news.SysNews" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="news_type" property="newsType" jdbcType="TINYINT" />
+    <result column="news_tag" property="newsTag" jdbcType="VARCHAR" />
+    <result column="news_category" property="newsCategory" jdbcType="TINYINT" />
+    <result column="news_template_id" property="newsTemplateId" jdbcType="INTEGER" />
+    <result column="news_title" property="newsTitle" jdbcType="VARCHAR" />
+    <result column="news_short_des" property="newsShortDes" jdbcType="VARCHAR" />
+    <result column="news_url" property="newsUrl" jdbcType="VARCHAR" />
+    <result column="news_pic" property="newsPic" jdbcType="VARCHAR" />
+    <result column="news_author" property="newsAuthor" jdbcType="VARCHAR" />
+    <result column="news_gmt_create" property="newsGmtCreate" jdbcType="TIMESTAMP" />
+    <result column="is_top" property="isTop" jdbcType="TINYINT" />
+    <result column="read_times" property="readTimes" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, news_type, news_tag, news_category, news_template_id, news_title, news_short_des,
+    news_url, news_pic, news_author, news_gmt_create, is_top, read_times, status, create_user_id,
+    create_user_name, update_user_id, update_user_name, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from sys_news
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_news
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.zxshare.news.SysNews" >
+    insert into sys_news ( news_type, news_tag,
+    news_category, news_template_id, news_title,
+    news_short_des, news_url, news_pic,
+    news_author, news_gmt_create, is_top,
+    read_times, status, create_user_id,
+    create_user_name, update_user_id, update_user_name,
+    gmt_create, gmt_modified)
+    values (#{id,jdbcType=BIGINT}, #{newsType,jdbcType=TINYINT}, #{newsTag,jdbcType=VARCHAR},
+    #{newsCategory,jdbcType=TINYINT}, #{newsTemplateId,jdbcType=INTEGER}, #{newsTitle,jdbcType=VARCHAR},
+    #{newsShortDes,jdbcType=VARCHAR}, #{newsUrl,jdbcType=VARCHAR}, #{newsPic,jdbcType=VARCHAR},
+    #{newsAuthor,jdbcType=VARCHAR}, #{newsGmtCreate,jdbcType=TIMESTAMP}, #{isTop,jdbcType=TINYINT},
+    #{readTimes,jdbcType=INTEGER}, #{status,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER},
+    #{createUserName,jdbcType=VARCHAR}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR},
+    #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP});
+    <selectKey resultType="long" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.zxshare.news.SysNews" >
+    insert into sys_news
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="newsType != null" >
+        news_type,
+      </if>
+      <if test="newsTag != null" >
+        news_tag,
+      </if>
+      <if test="newsCategory != null" >
+        news_category,
+      </if>
+      <if test="newsTemplateId != null" >
+        news_template_id,
+      </if>
+      <if test="newsTitle != null" >
+        news_title,
+      </if>
+      <if test="newsShortDes != null" >
+        news_short_des,
+      </if>
+      <if test="newsUrl != null" >
+        news_url,
+      </if>
+      <if test="newsPic != null" >
+        news_pic,
+      </if>
+      <if test="newsAuthor != null" >
+        news_author,
+      </if>
+      <if test="newsGmtCreate != null" >
+        news_gmt_create,
+      </if>
+      <if test="isTop != null" >
+        is_top,
+      </if>
+      <if test="readTimes != null" >
+        read_times,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createUserId != null" >
+        create_user_id,
+      </if>
+      <if test="createUserName != null" >
+        create_user_name,
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id,
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="newsType != null" >
+        #{newsType,jdbcType=TINYINT},
+      </if>
+      <if test="newsTag != null" >
+        #{newsTag,jdbcType=VARCHAR},
+      </if>
+      <if test="newsCategory != null" >
+        #{newsCategory,jdbcType=TINYINT},
+      </if>
+      <if test="newsTemplateId != null" >
+        #{newsTemplateId,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null" >
+        #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsShortDes != null" >
+        #{newsShortDes,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUrl != null" >
+        #{newsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsPic != null" >
+        #{newsPic,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAuthor != null" >
+        #{newsAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="newsGmtCreate != null" >
+        #{newsGmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isTop != null" >
+        #{isTop,jdbcType=TINYINT},
+      </if>
+      <if test="readTimes != null" >
+        #{readTimes,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+
+    <selectKey resultType="long" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.zxshare.news.SysNews" >
+    update sys_news
+    <set >
+      <if test="newsType != null" >
+        news_type = #{newsType,jdbcType=TINYINT},
+      </if>
+      <if test="newsTag != null" >
+        news_tag = #{newsTag,jdbcType=VARCHAR},
+      </if>
+      <if test="newsCategory != null" >
+        news_category = #{newsCategory,jdbcType=TINYINT},
+      </if>
+      <if test="newsTemplateId != null" >
+        news_template_id = #{newsTemplateId,jdbcType=INTEGER},
+      </if>
+      <if test="newsTitle != null" >
+        news_title = #{newsTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="newsShortDes != null" >
+        news_short_des = #{newsShortDes,jdbcType=VARCHAR},
+      </if>
+      <if test="newsUrl != null" >
+        news_url = #{newsUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="newsPic != null" >
+        news_pic = #{newsPic,jdbcType=VARCHAR},
+      </if>
+      <if test="newsAuthor != null" >
+        news_author = #{newsAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="newsGmtCreate != null" >
+        news_gmt_create = #{newsGmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isTop != null" >
+        is_top = #{isTop,jdbcType=TINYINT},
+      </if>
+      <if test="readTimes != null" >
+        read_times = #{readTimes,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="createUserId != null" >
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createUserName != null" >
+        create_user_name = #{createUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUserId != null" >
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateUserName != null" >
+        update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.zxshare.news.SysNews" >
+    update sys_news
+    set news_type = #{newsType,jdbcType=TINYINT},
+      news_tag = #{newsTag,jdbcType=VARCHAR},
+      news_category = #{newsCategory,jdbcType=TINYINT},
+      news_template_id = #{newsTemplateId,jdbcType=INTEGER},
+      news_title = #{newsTitle,jdbcType=VARCHAR},
+      news_short_des = #{newsShortDes,jdbcType=VARCHAR},
+      news_url = #{newsUrl,jdbcType=VARCHAR},
+      news_pic = #{newsPic,jdbcType=VARCHAR},
+      news_author = #{newsAuthor,jdbcType=VARCHAR},
+      news_gmt_create = #{newsGmtCreate,jdbcType=TIMESTAMP},
+      is_top = #{isTop,jdbcType=TINYINT},
+      read_times = #{readTimes,jdbcType=INTEGER},
+      status = #{status,jdbcType=TINYINT},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_user_name = #{createUserName,jdbcType=VARCHAR},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_user_name = #{updateUserName,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <!--新增-->
+  <resultMap id="pagerResultMap" type="com.onemile.bms.pojo.vo.zxshare.news.SysNewsVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="news_type" property="newsType" jdbcType="TINYINT" />
+    <result column="news_tag" property="newsTag" jdbcType="VARCHAR" />
+    <result column="news_category" property="newsCategory" jdbcType="TINYINT" />
+    <result column="news_template_id" property="newsTemplateId" jdbcType="INTEGER" />
+    <result column="news_title" property="newsTitle" jdbcType="VARCHAR" />
+    <result column="news_short_des" property="newsShortDes" jdbcType="VARCHAR" />
+    <result column="news_url" property="newsUrl" jdbcType="VARCHAR" />
+    <result column="news_pic" property="newsPic" jdbcType="VARCHAR" />
+    <result column="news_author" property="newsAuthor" jdbcType="VARCHAR" />
+    <result column="news_gmt_create" property="newsGmtCreate" jdbcType="TIMESTAMP" />
+    <result column="is_top" property="isTop" jdbcType="TINYINT" />
+    <result column="read_times" property="readTimes" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
+    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
+    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="New_Column_List" >
+    id, news_type, news_tag, news_category,news_template_id, news_title, news_short_des, news_url, news_pic,
+    news_author, news_gmt_create, is_top, read_times, t.status,if(t.status=0,10,t.status) s_status, create_user_id, create_user_name,
+    update_user_id, update_user_name, gmt_create, gmt_modified
+  </sql>
+
+  <select id="listPage" resultMap="pagerResultMap" parameterType="map">
+    SELECT
+    <include refid="New_Column_List" />
+    FROM sys_news t
+    <where>
+
+      <if test="newsType != null" >
+        and t.news_type = #{newsType}
+      </if>
+      <if test="newsTitle != null" >
+        and t.news_title  like concat('%', #{newsTitle}, '%')
+      </if>
+
+
+      <if test="status != null">
+        and t.status = #{status}
+      </if>
+
+      <if test="createBegin != null and createBegin!=''">
+        and <![CDATA[ left(t.news_gmt_create,10) >=  #{createBegin}  ]]>
+      </if>
+      <if test="createEnd != null and createEnd!=''">
+        and <![CDATA[ left(t.news_gmt_create,10) <=  #{createEnd}  ]]>
+      </if>
+
+
+      <if test="newsAuthor != null and newsAuthor!=''">
+        and t.news_author  like concat('%', #{newsAuthor}, '%')
+      </if>
+
+    </where>
+    order by s_status desc ,gmt_create desc
+
+  </select>
+
+
+</mapper>

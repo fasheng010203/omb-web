@@ -1,0 +1,1376 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<style type="text/css">
+    #allmap {width: 100%;height: 50%;overflow: hidden; margin:10px 15px 15px 15px;font-family:"微软雅黑";}
+</style>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=t8Vs8PBXqsTqRZ3nrrsHP24A1waZGBFt"></script>
+
+<@defaultLayout.layout>
+
+<div class="main-content-inner">
+
+    <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="ace-icon fa fa-home home-icon"></i>
+                <a href="#">Home</a>
+            </li>
+            <li>
+                <a href="#">智能箱管理</a>
+            </li>
+            <li class="active">设备管理</li>
+        </ul><!-- /.breadcrumb -->
+    </div>
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <!-- PAGE CONTENT BEGINS -->
+                <form id="search_form">
+                    <div class="form-group">
+
+                        <div class="col-xs-2">
+                            <input name="devid" type="text" placeholder="设备ID" class="form-control">
+                        </div>
+
+                        <div class="col-xs-2">
+                            <input name="title" type="text" placeholder="设备名称" class="form-control">
+                        </div>
+
+                        <div class="col-xs-3">
+                            <div class="input-daterange input-group">
+                                <input class="form-control" name="beginDate" type="text" placeholder="开始时间">
+                                <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                                <input class="form-control" name="endDate" type="text" placeholder="结束时间">
+                            </div>
+                        </div>
+                        <div class="col-xs-1 wizard-actions">
+                            <button onclick="search();" class="btn btn-purple btn-sm wizard-actions" type="button">
+                                <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                                查询
+                            </button>
+                        </div>
+                        <div class="col-xs-1 wizard-actions">
+                            <button onclick="clearSearch();" class="btn btn-purple btn-sm wizard-actions" type="button">
+                                <span class="ace-icon fa fa-undo icon-on-right bigger-110"></span>
+                                重置
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+                <br/>
+                <hr/>
+
+
+<div style="text-align: right">
+                <button type="button" class="btn btn-white btn-primary align-right" onclick="batAddDis()">批量添加</button>
+</div>
+
+                <!--<div style="text-align: right">-->
+                    <!--<button type="button" class="btn btn-white btn-primary align-right" onclick="getDevice()">获取设备</button>-->
+                <!--</div>-->
+
+                <table id="grid-table"></table>
+                <div id="grid-pager"></div>
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div>
+
+
+
+<div id="modal-form" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="formTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="post" novalidate enctype="multipart/form-data">
+
+                            <br>
+                            <br>
+
+                            <br>
+                            <div class="form-group">
+                                <input name="id" id="id" value="" type="hidden"/>
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">设备ID:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="devId" id="devId" class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">设备名称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="title" id="title"  class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">下发命令:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+
+
+                                        <select name="cmd"  id="cmd"  class="col-xs-12 col-sm-6"  >
+                                            <option value="BEEP" selected = "selected" >远程寻箱</option>
+                                            <option value="OPOA" >增氧机 A 开</option>
+                                            <option value="OPOB">增氧机 B 开</option>
+                                            <option value="CLOA" >增氧机 A 关</option>
+                                            <option value="CLOB">增氧机 B 关</option>
+                                            <option value="RESET" >系统复位</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <br>
+                            <br>
+
+                            <br>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div id="saveBtnId" style="display: none" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="save();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>发送
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="modal-cityform" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="cityformTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="cityForm" method="post" novalidate enctype="multipart/form-data">
+
+                            <br>
+                            <br>
+
+                            <br>
+                            <div class="form-group">
+                                <input name="id" id="id" value="" type="hidden"/>
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">设备ID:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="devId" id="devId" class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">设备名称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="title" id="title"  class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">省份:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+
+
+
+                                        <select name="citypid"  id="citypid"  class="col-xs-12 col-sm-6" onchange="cityChange()" >
+
+<#list listBaseCityPar as obj>
+                                            <option value="${obj.id}" >${obj.name}</option>${obj.name}
+</#list>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">城市:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+
+
+
+                                        <select name="cityid"  id="cityid"  class="col-xs-12 col-sm-6"  >
+
+                                            <#list listBaseCity as obj>
+                                            <option value="${obj.id}" >${obj.name}</option>${obj.name}
+                                        </#list>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <br>
+                            <br>
+
+                            <br>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div id="saveBtnId1"  class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="savecity();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="modal-qrform" class="modal" tabindex="-1">
+    <div class="modal-dialog width-20">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="qrformTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="profile-picture">
+													<img id="qrurl" class="img-responsive" alt="Alex's Avatar" src="" style="display: block;">
+												</span>
+                    </div>
+
+                </div>
+            </div>
+            <div id="saveqrBtnId" style="display: none" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="modal-addform" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="addformTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addDataForm" method="post" novalidate enctype="multipart/form-data">
+
+                            <br>
+                            <br>
+
+                            <br>
+
+                            <input name="devid" id="devid" type="hidden"/>
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">二维码编号:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="devdesc" id="devdesc" class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">设备编号:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="authInfo" id="authInfo" class="col-xs-12 col-sm-6"  />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <br>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="saveBtnIdNew" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="saveDevice();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-viewform" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="viewformTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="viewDataForm" method="post" novalidate enctype="multipart/form-data">
+
+                            <!--<input name="id" id="private" value="true" type="hidden"/>-->
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="control-label col-xs-12 col-sm-3 no-padding-right">设备名称:</label>-->
+                                <!--<div class="col-xs-12 col-sm-9">-->
+                                    <!--<div class="clearfix">-->
+                                        <!--<input type="text"  name="title" id="title"  class="col-xs-12 col-sm-6"  />-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="control-label col-xs-12 col-sm-3 no-padding-right">设备描述:</label>-->
+                                <!--<div class="col-xs-12 col-sm-9">-->
+                                    <!--<div class="clearfix">-->
+                                        <!--<input type="text"  name="devdesc" id="devdesc" class="col-xs-12 col-sm-6"  />-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="control-label col-xs-12 col-sm-3 no-padding-right">鉴权信息:</label>-->
+                                <!--<div class="col-xs-12 col-sm-9">-->
+                                    <!--<div class="clearfix">-->
+                                        <!--<input type="text"  name="authInfo" id="authInfo" class="col-xs-12 col-sm-6"  />-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <div class="form-group width-100">
+                                <div id="allmap"></div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="viewBtnId" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    关闭
+                </button>
+
+                <!--<button onclick="saveDevice();" class="btn btn-sm btn-primary">-->
+                    <!--<i class="ace-icon fa fa-check"></i>保存-->
+                <!--</button>-->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="modal-bataddform" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="bataddformTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="bataddform" method="post" novalidate enctype="multipart/form-data">
+
+                            <br>
+                            <div id="divUpload">
+                                <div class="form-group" >
+                                    <label class="control-label col-xs-12 col-sm-3 no-padding-right">上传批量文件:</label>
+
+                                    <div class="col-xs-12 col-sm-6">
+                                        <div class="clearfix">
+                                            <input type="file"  name="picFile" accept="	text/csv"  id="id-input-file-1" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="space-2"></div>
+                            <div class="space-2"></div>
+                            <div class="space-2"></div>
+                            <div class="space-2"></div>
+                            <div class="space-2"></div>
+                            <div class="space-2"></div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <div id="saveBtnBatIdNew" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="saveBatData();" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>保存
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script type="application/javascript">
+
+
+    //初始化查询条件日历控件
+    $('.input-daterange').datepicker({
+        autoclose: true,
+        language: 'cn',
+        format: 'yyyy-mm-dd',
+        todayBtn: 'linked',
+        todayHighlight: true,
+    })
+
+
+    var gridUrl = "/device/getDeviceInfoList";
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+    var parent_column = $(grid_selector).closest('[class*="col-"]');
+
+    //resize to fit page size
+    $(window).on('resize.jqGrid', function () {
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    })
+
+    //resize on sidebar collapse/expand
+    $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+        if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+            //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+            setTimeout(function () {
+                $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+            }, 20);
+        }
+    })
+
+
+    // 初始化grid
+    jQuery(grid_selector).jqGrid({
+        caption: "设备列表",
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: pager_selector,
+        viewrecords: true,
+        datatype: "json",
+        url: '/device/getDeviceInfoList',
+        colNames: ['操作', 'id','cityid','provinceid','是否待维修','是否丢失','设备状态','设备ID','二维码编号','库存状态','鉴权信息','接入协议','内温度','内湿度','箱门状态','电池拆卸次数','主电池电量','主电池状态','增氧泵A状态','增氧泵B状态', '创建时间','二维码图片','经度','纬度'],
+        colModel: [
+            {name: 'action', index: '', width: 200, fixed: false, sortable: false, resize: true, formatter: acFormat},
+            {name: "id", index: "id", sorttype: "int", key: true,hidden: true, width: 20},
+            {name: "cityid", index: "cityid", hidden:true, width: 80},
+            {name: "provinceid", index: "provinceid", hidden:true, width: 80},
+            {name: 'isfix', index: 'isfix', width: 80,formatter: fixFormat},
+            {name: 'islost', index: 'islost', width: 80,formatter: lostFormat},
+            {name: 'online', index: 'online', width: 80, formatter: statusFormat},
+            {name: 'devId', index: 'devId', width: 160},
+            {name: 'devdesc', index: 'devdesc', width: 160},
+
+            // {name: 'tags', index: 'tags', width: 160},
+            {name: 'isinstock', index: 'isinstock', width: 160,formatter:isinstockFormat},
+            {name: 'authInfo', index: 'authInfo', width: 160},
+            {name: 'protocol', index: 'protocol', width: 160,hidden: true,},
+
+            {name: 'temp', index: 'temp', width: 160},
+            {name: 'humi', index: 'humi', width: 160},
+            {name: 'gate', index: 'gate', width: 160,formatter: gateFormat},
+            {name: 'batcnt', index: 'batcnt', width: 160,formatter: batcntFormat},
+            {name: 'vbat', index: 'vbat', width: 160,},
+            {name: 'vbat', index: 'vbat', width: 160,formatter: vbatFormat},
+
+            {name: 'obsa', index: 'obsa', width: 160, formatter: obsAFormat},
+            {name: 'obsb', index: 'obsb', width: 160, formatter: obsBFormat},
+
+            {name: 'gmtCreate', index: 'gmtCreate', width: 250, sorttype: 'date'},
+            {name: 'qrurl', index: 'qrurl', width: 160,},
+            {name: 'lat', index: 'lat', width: 160,hidden: true,},
+            {name: 'lon', index: 'lon', width: 160,hidden: true,}
+
+        ],
+        loadComplete: function () {
+            var table = this;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    //trigger window resize to make the grid get the correct size
+    $(window).triggerHandler('resize.jqGrid');
+    var curUrl="";
+    //grid navButtons
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        })
+        .navButtonAdd(pager_selector, {
+            caption: "",
+            position: "last",
+            buttonicon: "ace-icon fa fa-search-plus grey",
+            onClickButton: function () {
+                var id = $(grid_selector).jqGrid('getGridParam', 'selrow');
+                if (Zx.isEmpty(id)) {
+                    Zx.msg('请选择要操作的行');
+                    return false;
+                }
+                var rowData = $('#grid-table').jqGrid('getRowData', id);
+                $('#modal-addform').modal();
+                $('#addformTitle').html('查询');
+                $('#addDataForm').form('load',rowData);
+                btnDisplay(0);
+                setFormStatus(false,0);
+            }
+        })
+            <@shiro.hasPermission name="${add}">
+            .navButtonAdd(pager_selector, {
+                caption: "",
+                position: "last",
+                buttonicon: "ace-icon fa fa-plus-circle purple",
+                onClickButton: function () {
+                    curUrl="/device/saveDeviceInfo";
+                     clearAddDataForm();
+                     setFormStatus(true,0);
+                     btnDisplay(1);
+                    $('#modal-addform').modal();
+                    $('#addformTitle').html('添加设备');
+                }
+            })
+            </@shiro.hasPermission>
+
+
+
+
+
+
+        // QRcode display
+    function batAddDis() {
+
+        $('#modal-bataddform').modal();
+        $('#bataddformTitle').html('批量添加');
+
+    }
+
+    function getDevice() {
+
+        var curUrl="/device/getDeviceInfo";
+
+
+        Zx.post({
+            url: curUrl,
+            loading: true,
+            data: {
+            },
+            success: function (data) {
+
+                if (data.code == 0) {
+
+
+                } else if (data.code == 1) {
+                    Zx.msg(data.message);
+                }
+            }
+        });
+
+    }
+
+
+    //保存
+    function saveBatData() {
+
+        var curUrl="/device/saveBatData";
+
+        // 验证表单
+        if (!$("#bataddform").validate().form()) {
+            return false;
+        }
+
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                $('#bataddform').form('submit',{
+                    "url": curUrl,
+                    onSubmit: function(){
+                        return true;
+                    },
+                    success: function(data){
+                        var data = eval('('+data+')');
+                        if (data.code == 0)
+                        {
+                            $("#modal-bataddform").modal("toggle");
+                            Zx.msg('保存成功');
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+
+    }
+
+
+
+
+    //操作按钮format
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId;
+
+        var actionHtml = "<div class=\"hidden-sm hidden-xs btn-group\">";
+        var btnEditCity = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEditCity(" + rowIndex + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-inbox bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnEdit = "<@shiro.hasPermission name='${update}'><button onclick='javascript:rowEdit(" + rowIndex + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa fa-pencil bigger-110\"></i></button></@shiro.hasPermission>";
+        var btnQRcode = "<@shiro.hasPermission name='${update}'><button onclick='javascript:qRcodeDis(" + rowIndex + ");'  class=\"btn btn-xs btn-success\"> <i class=\"ace-icon fa fa-barcode bigger-110\"></i></button></@shiro.hasPermission>";
+
+
+        var btnToLoc = "<@shiro.hasPermission name='${update}'>" +
+        "" +
+        "<button onclick='javascript:disLoc("  + rowIndex + ");'  class=\"btn btn-xs btn-info\"> <i class=\"ace-icon fa bigger-105\">定位</i></button></@shiro.hasPermission>";
+        ;
+
+
+        actionHtml += btnEditCity+btnEdit+btnQRcode+btnToLoc;
+        actionHtml += "</div>";
+
+        return actionHtml;
+    }
+
+
+    //fixFormat
+    function fixFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId;
+
+        var openView=rowObject.isfix;
+
+        var actionHtml = "<div class=\"btn-group\">";
+
+        var btnDelete;
+
+        if(openView==0){
+
+            btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange"+rowIndex+"\"   onchange='javascript:saveDeviceInfoIsfix(" + rowIndex + ","+id+")'  name=\"ischange\"  class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"> </span> </@shiro.hasPermission>";
+        }else {
+
+            btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange"+rowIndex+"\"   onchange='javascript:saveDeviceInfoIsfix(" + rowIndex + ","+id+")' checked=\"true\"  name=\"ischange\" class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"></span> </@shiro.hasPermission>";
+
+        }
+
+        actionHtml += btnDelete;
+
+        actionHtml += "</div>";
+
+        return actionHtml;
+    }
+
+    //fixFormat
+    function lostFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId+100;
+
+        var openView=rowObject.islost;
+
+        var actionHtml = "<div class=\"btn-group\">";
+
+        var btnDelete;
+
+        if(openView==0){
+
+            btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange"+rowIndex+"\"   onchange='javascript:saveDeviceInfoIslost(" + rowIndex + ","+id+")'  name=\"ischange\"  class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"> </span> </@shiro.hasPermission>";
+        }else {
+
+            btnDelete = "<@shiro.hasPermission name='${update}'> <input id=\"ischange"+rowIndex+"\"   onchange='javascript:saveDeviceInfoIslost(" + rowIndex + ","+id+")' checked=\"true\"  name=\"ischange\" class=\"ace ace-switch ace-switch-4 btn-flat\" type=\"checkbox\" /> <span class=\"lbl\"></span> </@shiro.hasPermission>";
+
+        }
+
+        actionHtml += btnDelete;
+
+        actionHtml += "</div>";
+
+        return actionHtml;
+    }
+
+
+
+    function isinstockFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.isinstock == 0) {
+            result = "<span class=\"label label-sm label-success\">在库</span>";
+        } else {
+            result = "<span class=\"label label-sm label-success\">出库</span>";
+        }
+        return result;
+    }
+
+    function gateFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.gate == "OPEN") {
+            result = "<span class=\"label label-sm label-success\">打开</span>";
+        } else {
+            result = "<span class=\"label label-sm label-grey\">关闭</span>";
+        }
+        return result;
+    }
+
+
+    function vbatFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.vbat > 0) {
+
+            result = "<span class=\"label label-sm label-success\">在</span>";
+        } else {
+            result = "<span class=\"label label-sm label-grey\">不在</span>";
+        }
+        return result;
+    }
+
+
+    function obsAFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.obsa == "GO") {
+            result = "<span class=\"label label-sm label-success\">工作</span>";
+        } else if (rowObject.obsa == "STOP") {
+            result = "<span class=\"label label-sm label-grey\">不工作</span>";
+        }else{
+
+            result = "<span class=\"label label-sm label-grey\">未知状态</span>";
+        }
+        return result;
+    }
+
+    function obsBFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.obsb == "GO") {
+            result = "<span class=\"label label-sm label-success\">工作</span>";
+        } else if (rowObject.obsb== "STOP") {
+            result = "<span class=\"label label-sm label-grey\">不工作</span>";
+        }else{
+
+            result = "<span class=\"label label-sm label-grey\">未知状态</span>";
+        }
+        return result;
+    }
+
+    function batcntFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.batcnt == "") {
+            result = "<span>0</span>";
+        }
+        return result;
+    }
+
+
+    // 状态format
+    function statusFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.online == "true") {
+            result = "<span class=\"label label-sm label-success\">在线</span>";
+        }  else if (rowObject.online == "false") {
+            result = "<span class=\"label label-sm label-danger\">离线</span>";
+        } else {
+            result = "<span class=\"label label-sm label-grey\">未知状态</span>";
+        }
+        return result ;
+    }
+
+    // 搜索
+    function search() {
+        var strPrms = "";
+        var params = ($("#search_form").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                strPrms += $(params.get(i)).attr("name") + "=" + $(params.get(i)).val() + "&";
+            }
+        }
+        jQuery(grid_selector).jqGrid('setGridParam', {
+            url: gridUrl + "?" + strPrms
+        }).trigger("reloadGrid");
+
+    }
+
+    //清空搜索
+    function clearSearch() {
+        // 清空input
+        var params = ($("#search_form").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                $(params.get(i)).val('');
+            }
+        }
+        // 清空 bootstrap-select
+        $('.selectpicker').selectpicker('val', '');
+    }
+    //编辑
+
+    //清空新增弹出框
+    function clearAddForm() {
+        // 清空input
+        var params = ($("#addForm").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                $(params.get(i)).val('');
+            }
+        }
+        btnDisplay(0);
+        // 清空 bootstrap-select
+        $('.selectpicker').selectpicker('val', '');
+        //清除验证
+        $("#addForm").validate().resetForm();
+    }
+
+
+    //清空新增弹出框
+    function clearAddDataForm() {
+        // 清空input
+        var params = ($("#addDataForm").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                $(params.get(i)).val('');
+            }
+        }
+        // btnDisplay(0);
+        // // 清空 bootstrap-select
+        // $('.selectpicker').selectpicker('val', '');
+        //清除验证
+        $("#addDataForm").validate().resetForm();
+    }
+
+
+    //按钮展示
+    function btnDisplay(i) {
+        if(i==1)
+        {
+            $("#saveBtnId").show();
+            $("#saveBtnIdNew").show()
+        }
+        if(i==0){
+            $("#saveBtnId").hide();
+            $("#saveBtnIdNew").hide();
+        }
+
+
+    }
+
+
+    //获取数据
+    function getGridRow(grid,indexId){
+        var rowMap=$(grid).jqGrid("getRowData",indexId)
+        var strPrm=""
+
+        for (var key in rowMap) {
+
+            if (key!='action' && key!='statusHint') {
+                strPrm += key + "=" + rowMap[key] + "&";
+            }
+        }
+
+        return strPrm;
+    }
+
+
+    //编辑
+    function rowEdit(rowIndex) {
+        curUrl="/device/sendCmdToDevice";
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        clearAddForm();
+        btnDisplay(1);
+        $('#modal-form').modal();
+        $('#formTitle').html('下发命令');
+        $('#addForm').form('load',rowData);
+        setFormStatus(false,1)
+    }
+
+    //编辑
+    function rowEditCity(rowIndex) {
+        curUrl="/device/sendCmdToDevice";
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        // clearAddForm();
+        // btnDisplay(1);
+        $('#modal-cityform').modal();
+        $('#cityformTitle').html('设置城市');
+        $('#cityForm').form('load',rowData);
+
+        $("#citypid").val(rowData.provinceid);
+
+        cityChange();
+
+        $("#cityid").val(rowData.cityid);
+        // $("#cityid").attr("value",rowData.cityid);
+        // $("#citypid").attr("value",rowData.provinceid);
+
+
+        $("#devid").val(rowData.id);
+
+        setFormStatus(false,1)
+    }
+
+
+    function cityChange(){
+
+        var curUrl="/device/getBaseCityListByPid";
+
+        $("#cityid").empty()
+
+        var citypid=$("#citypid").val();
+        var cityid=$("#cityid").val();
+
+
+        Zx.post({
+            url: curUrl,
+            loading: true,
+            data: {
+                citypid: citypid,
+                cityid:cityid
+            },
+            success: function (data) {
+
+                if (data.code == 0) {
+
+                        var ophtml="";
+
+                        for (var i = 0; i < data.data.length; i++) {
+                            ophtml=ophtml+"<option value='"+data.data[i].id+"'>"+data.data[i].name+"</option>";
+                        };
+
+                        $("#cityid").html(ophtml);
+
+                    } else if (data.code == 1) {
+                    Zx.msg(data.message);
+                }
+            }
+        });
+
+
+    }
+
+
+    // QRcode display
+    function qRcodeDis(rowIndex) {
+
+
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        $('#modal-qrform').modal();
+        $('#qrformTitle').html('设备二维码');
+
+        $("#qrurl").attr('src',"../static/"+rowData.qrurl);
+
+    }
+
+    function disLoc(rowIndex) {
+
+
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        $('#modal-viewform').modal();
+        $('#viewformTitle').html('查看设备');
+
+
+
+
+        // 百度地图API功能
+        var map = new BMap.Map("allmap");
+        var point = new BMap.Point(rowData.lon,rowData.lat);
+        map.centerAndZoom(point, 6.5);
+        map.enableScrollWheelZoom();
+        var marker = new BMap.Marker(point);  // 创建标注
+        map.addOverlay(marker);               // 将标注添加到地图中
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+
+        //$("#qrurl").attr('src',"../static/"+rowData.qrurl);
+
+    }
+
+
+
+
+
+
+    function setFormStatus(flag,num){
+        //$('input,select,textarea',$('#addForm')).prop('readonly',flag);
+        //$('input,select,textarea',$('#addForm')).attr('disabled',flag);
+
+        if(flag==false){
+            $("#devId").attr("readonly","readonly");
+            $("#title").attr("readonly","readonly");
+            $('#cmd')[0].selectedIndex = 0;
+            $("#devdesc").attr("readonly","readonly");
+            $("#authInfo").attr("readonly","readonly");
+
+        }else{
+            $("#devId").removeAttr("readonly");
+            $("#title").removeAttr("readonly");
+            $("#devdesc").removeAttr("readonly");
+            $("#authInfo").removeAttr("readonly");
+        }
+    }
+    // 表单验证
+    $('#addForm').validate({
+        errorElement: 'div',
+        errorClass: 'help-block',
+        rules: {
+            verison: {
+                required: true
+            },
+            platform: {
+                required: true
+            },
+            is_force_update: {
+                required: true
+            },
+            down_url: {
+                required: true
+            }
+        },
+        highlight: function (e) {
+            $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+        },
+        success: function (e) {
+            $(e).closest('.form-group').removeClass('has-error'); //.addClass('has-info')
+            $(e).remove();
+        },
+        errorPlacement: function (error, element) {
+            if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                var controls = element.closest('div[class*="col-"]');
+                if (controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+            }
+            else error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+        },
+        invalidHandler: function (form) {
+        }
+    });
+
+
+    //保存
+    function savecity() {
+
+        var id=$("#devid").val();
+        var cityid=$("#cityid").val();
+        var provinceid=$("#citypid").val();
+        // 验证表单
+        if (!$("#cityForm").validate().form()) {
+            return false;
+        }
+            $.post('/device/updateDeviceInfoCity', {
+                Id : id,
+                cityid:cityid,
+                provinceid:provinceid
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg('保存成功');
+                    $("#modal-cityform").modal("toggle");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+    }
+
+    //保存
+    function save() {
+
+        // 验证表单
+        if (!$("#addForm").validate().form()) {
+            return false;
+        }
+        layer.confirm('确定要发送吗？', {
+                btn: ['确定', '取消']
+            }, function () {
+                $('#addForm').form('submit',{
+                    "url": curUrl,
+                    onSubmit: function(){
+                        return true;
+                    },
+                    success: function(data){
+                        var data = eval('('+data+')');
+                        if (data.code == 0)
+                        {
+                            Zx.msg('发送成功');
+                            $("#modal-form").modal("toggle");
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+    }
+
+
+    //保存
+    function saveDevice() {
+        // 验证表单
+        if (!$("#addDataForm").validate().form()) {
+            return false;
+        }
+        layer.confirm('确定要保存吗？', {
+                btn: ['确定', '取消']
+
+            }, function () {
+                $('#addDataForm').form('submit',{
+                    "url": curUrl,
+                    onSubmit: function(){
+                        return true;
+                    },
+                    success: function(data){
+                        var data = eval('('+data+')');
+                        if (data.code == 0)
+                        {
+                            Zx.msg('保存成功');
+                            $("#modal-addform").modal("toggle");
+                            jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                        } else if (data.code == 1) {
+                            Zx.msg(data.message);
+                        }
+                    }
+                });
+            }, function () {
+
+            }
+        );
+    }
+
+
+
+    function saveDeviceInfoIsfix(rowIndex,id) {
+
+        var arrChk=$("#ischange"+rowIndex+"").is(':checked');
+
+        if(!arrChk){
+
+            $.post('/device/updateDeviceInfo', {
+                Id : id,
+                isfix:"0"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备已维修");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+
+        }else{
+            $.post('/device/updateDeviceInfo', {
+                Id : id,
+                isfix:"1"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备待维修");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+        }
+    }
+
+    function saveDeviceInfoIslost(rowIndex,Id) {
+
+        var arrChk=$("#ischange"+rowIndex+"").is(':checked');
+
+        if(!arrChk){
+            $.post('/device/updateDeviceInfo', {
+                Id : Id,
+                islost:"0"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备已找回");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+
+        }else{
+            $.post('/device/updateDeviceInfo', {
+                Id : Id,
+                islost:"1"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备丢失");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+        }
+    }
+
+    function saveDeviceInfoIsinstock(rowIndex,Id,isIn) {
+
+        if(isIn=="0"){
+
+            $.post('/device/updateDeviceInfo', {
+                Id : Id,
+                isinstock:"1"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备出库成功");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+
+        }else {
+            $.post('/device/updateDeviceInfo', {
+                Id : Id,
+                isinstock:"0"
+            }, function(result) {
+                if (result.success) {
+                    Zx.msg("设备入库成功");
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else {
+                    Zx.msg(result.message);
+                }
+            }, 'json');
+        }
+    }
+
+
+
+
+
+</script>
+</@defaultLayout.layout>
+

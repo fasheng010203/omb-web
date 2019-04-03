@@ -1,0 +1,424 @@
+<#import "/layout/_container.ftl" as defaultLayout>
+
+<@defaultLayout.layout>
+
+<div class="main-content-inner">
+    <div class="page-content">
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- PAGE CONTENT BEGINS -->
+                <form id="search_form">
+                    <div class="form-group">
+                        <div class="col-xs-2">
+                            <input id="title" name="title" type="text" placeholder="请输入标题" class="form-control">
+                        </div>
+                        <div class="col-xs-2">
+                            <input id="mobile" name="mobile" type="text" placeholder="请输入手机号" class="form-control">
+                        </div>
+                        <div class="col-xs-2">
+                            <select id="status" name="status" class="selectpicker show-tick form-control" data-live-search="true">
+                                <option value="">== 请选择状态 ==</option>
+                                <option value="0">未处理</option>
+                                <option value="1">已处理</option>
+                                <option value="2">暂存不处理</option>
+                            </select>
+                        </div>
+
+                        <div class="col-xs-3">
+                            <div class="input-daterange input-group">
+                                <input class="form-control" name="beginDate" type="text" placeholder="开始时间">
+                                <span class="input-group-addon"><i class="fa fa-exchange"></i></span>
+                                <input class="form-control" name="endDate" type="text" placeholder="结束时间">
+                            </div>
+                        </div>
+                        <div class="col-xs-1 wizard-actions">
+                            <button onclick="search();" class="btn btn-purple btn-sm wizard-actions" type="button">
+                                <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                                查询
+                            </button>
+                        </div>
+                        <div class="col-xs-1 wizard-actions">
+                            <button onclick="clearSearch();" class="btn btn-purple btn-sm wizard-actions" type="button">
+                                <span class="ace-icon fa fa-undo icon-on-right bigger-110"></span>
+                                重置
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+                <br/>
+                <hr/>
+
+                <table id="grid-table"></table>
+                <div id="grid-pager"></div>
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+</div>
+
+<div id="modal-form" class="modal" tabindex="-1">
+    <div class="modal-dialog width-50">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 5px 15px 4px">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="blue bigger" id="formTitle"></h5>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="addForm" method="post" novalidate enctype="multipart/form-data">
+
+
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">标题:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input name="id" id="id" value="" type="hidden"/>
+                                        <input name="status"  value="" type="hidden"/>
+                                        <input type="text"  name="title" maxlength="20" class="col-xs-12 col-sm-6" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">联系方式:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="mobile"  class="col-xs-12 col-sm-6" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">昵称:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <input type="text"  name="nickName"  class="col-xs-12 col-sm-6" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-3 no-padding-right">内容:</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    <div class="clearfix">
+                                        <textarea class="col-xs-10 col-sm-col-sm-10" id="remark"  style="border: none;background-color: white" readonly name="content"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+                            <div class="space-2"></div>
+
+
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="auditBtnId" style="display: none" class="modal-footer">
+                <button class="btn btn-sm" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times"></i>
+                    取消
+                </button>
+
+                <button onclick="audit(1);" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>已处理
+                </button>
+                <button onclick="audit(2);" class="btn btn-sm btn-primary">
+                    <i class="ace-icon fa fa-check"></i>暂时不处理
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+
+
+    //初始化查询条件日历控件
+    $('.input-daterange').datepicker({
+        autoclose: true,
+        language: 'cn',
+        format: 'yyyy-mm-dd',
+        todayBtn: 'linked',
+        todayHighlight: true,
+    })
+
+
+    var gridUrl = "/base/getSuggestList";
+    var grid_selector = "#grid-table";
+    var pager_selector = "#grid-pager";
+    var parent_column = $(grid_selector).closest('[class*="col-"]');
+
+    //resize to fit page size
+    $(window).on('resize.jqGrid', function () {
+        $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+    })
+
+    //resize on sidebar collapse/expand
+    $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+        if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+            //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+            setTimeout(function () {
+                $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+            }, 20);
+        }
+    })
+
+
+    // 初始化grid
+    jQuery(grid_selector).jqGrid({
+        caption: "意见反馈列表",
+        height: 'auto',
+        shrinkToFit: false,
+        autoScroll: true,
+        rownumbers: true,
+        rowNum: 10,
+        rowList: [10, 20, 30],
+        pager: pager_selector,
+        viewrecords: true,
+        datatype: "json",
+        url: '/base/getSuggestList',
+        colNames: [ '操作','id','标题', '内容','联系方式', '昵称' ,'状态隐藏','状态',  '创建时间'],
+        colModel: [
+            {name: 'action', index: '', width: 100, fixed: false, sortable: false, resize: true, formatter: acFormat},
+            {name: 'id', index: 'id', width: 60, sorttype: "int"},
+            {name: 'title', index: 'title', width: 200},
+            {name: 'content', index: 'content', width: 200,hidden:true},
+            {name: 'mobile', index: 'mobile', width: 150},
+            {name: 'nickName', index: 'nickName', width: 150},
+            {name: 'status', index: 'status', width: 100, hidden:true},
+            {name: 'statusHint', index: 'statusHint', width: 100, sorttype: 'int', formatter: statusFormat},
+            {name: 'gmtCreate', index: 'gmtCreate', width: 250, sorttype: 'date'}
+
+        ],
+        loadComplete: function () {
+            var table = this;
+            setTimeout(function () {
+                updatePagerIcons(table);
+            }, 0);
+        }
+    });
+
+    //trigger window resize to make the grid get the correct size
+    $(window).triggerHandler('resize.jqGrid');
+    var curUrl="";
+    //grid navButtons
+    jQuery(grid_selector)
+        .navGrid(pager_selector, {
+            add: false, edit: false, del: false, view: false, search: false,
+            refresh: true,
+            refreshicon: 'ace-icon fa fa-refresh green'
+        })
+        .navButtonAdd(pager_selector, {
+            caption: "",
+            position: "last",
+            buttonicon: "ace-icon fa fa-search-plus grey",
+            onClickButton: function () {
+                var id = $(grid_selector).jqGrid('getGridParam', 'selrow');
+                if (Zx.isEmpty(id)) {
+                    Zx.msg('请选择要操作的行');
+                    return false;
+                }
+                var rowData = $('#grid-table').jqGrid('getRowData', id);
+                $('#modal-form').modal();
+                $('#formTitle').html('查询');
+                $('#addForm').form('load',rowData);
+                btnDisplay(0,1);
+            }
+        })
+    // .navButtonAdd(pager_selector, {
+    //     caption: "",
+    //     position: "last",
+    //     buttonicon: "ace-icon fa  fa-download green",
+    //     onClickButton: function () {
+    //         layer.full( // 默认最大化，否则 layer.open
+    //             layer.open({
+    //                 type: 2,
+    //                 title: '新增页面-iframe嵌套页',
+    //                 shadeClose: true,
+    //                 shade: false,
+    //                 maxmin: true, //开启最大化最小化按钮
+    //                 area: ['800px', '400px'],
+    //                 content: '/demo/form',
+    //                 end: function () {
+    //                     // 刷新父页面
+    //                     location.reload();
+    //                 }
+    //             })
+    //         );
+    //     }
+    // });
+
+
+    function rowAudit(rowIndex) {
+        curUrl="/base/auditSuggest";
+        var rowData = $('#grid-table').jqGrid('getRowData', rowIndex);
+        clearAddForm();
+        $('#modal-form').modal();
+        $('#formTitle').html('处理');
+        $('#addForm').form('load',rowData);
+        btnDisplay(1,rowData.status);
+
+        //$('input,select,textarea',$('#addForm')).prop('readonly',true);
+        //alert(JSON.stringify(rowData));
+    }
+
+    //操作按钮format
+    function acFormat(cellvalue, options, rowObject) {
+        //数据主键唯一
+        var id = rowObject.id;
+        //jqgrid 行索引
+        var rowIndex = options.rowId;
+
+        var actionHtml = "<div class=\" btn-group\">";
+
+
+        var btnCheck = "<button onclick='javascript:rowAudit(" + rowIndex + ");' class=\"btn btn-xs btn-success\"><i class=\"ace-icon fa fa-check bigger-110\"></i></button>";
+
+
+        actionHtml +=btnCheck ;
+
+        actionHtml += "</div>";
+
+        return actionHtml;
+    }
+
+
+    // 状态format
+    function statusFormat(cellvalue, options, rowObject) {
+        var result;
+        if (rowObject.status == 1) {
+            result = "<span class=\"label label-sm label-success\">已处理</span>";
+        } else if (rowObject.status == 0) {
+            result = "<span class=\"label label-sm label-primary\">未处理</span>";
+        } else if (rowObject.status == 2) {
+            result = "<span class=\"label label-sm label-danger\">暂存不处理</span>";
+        } else {
+            result = "<span class=\"label label-sm label-grey\">未知状态</span>";
+        }
+        return result;
+    }
+
+    // 搜索
+    function search() {
+        var strPrms = "";
+        var params = ($("#search_form").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                strPrms += $(params.get(i)).attr("name") + "=" + $(params.get(i)).val() + "&";
+            }
+        }
+        jQuery(grid_selector).jqGrid('setGridParam', {
+            url: gridUrl + "?" + strPrms
+        }).trigger("reloadGrid");
+
+    }
+
+    //清空搜索
+    function clearSearch() {
+        // 清空input
+        var params = ($("#search_form").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                $(params.get(i)).val('');
+            }
+        }
+        // 清空 bootstrap-select
+        $('.selectpicker').selectpicker('val', '');
+    }
+    //编辑
+
+
+
+    //清空新增弹出框
+    function clearAddForm() {
+        // 清空input
+        var params = ($("#addForm").find(":input"));
+        for (var i = 0; i < params.size(); i++) {
+            if (!Zx.isEmpty($(params.get(i)).val())) {
+                $(params.get(i)).val('');
+            }
+        }
+        btnDisplay(0,0);
+        // 清空 bootstrap-select
+        $('.selectpicker').selectpicker('val', '');
+        //清除验证
+        $("#addForm").validate().resetForm();
+    }
+
+
+    //按钮展示
+    function btnDisplay(i,status) {
+        if(i==1)
+        {
+            if(status==0 || status==2){
+                $("#auditBtnId").show();
+            }else{
+                $("#auditBtnId").hide();
+            }
+        }
+        if(i==0){
+            $("#auditBtnId").hide();
+        }
+
+
+    }
+
+
+    //获取数据
+    function getGridRow(grid,indexId){
+        var rowMap=$(grid).jqGrid("getRowData",indexId)
+        var strPrm=""
+
+        for (var key in rowMap) {
+
+            if (key!='action' && key!='statusHint') {
+                strPrm += key + "=" + rowMap[key] + "&";
+            }
+        }
+
+        return strPrm;
+    }
+
+
+    function audit(status) {
+
+        var id = $("#id").val();
+        Zx.post({
+            url: curUrl,
+            loading: true,
+            data: {id: id, status: status},
+            success: function (data) {
+                if (data.code == 0) {
+                    $("#modal-form").modal("toggle");
+                    Zx.msg('操作成功');
+                    jQuery(grid_selector).jqGrid().trigger("reloadGrid");
+                } else if (data.code == 1) {
+                    Zx.msg(data.message);
+                }
+            }
+        });
+    }
+
+
+</script>
+
+</@defaultLayout.layout>
+

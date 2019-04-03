@@ -1,0 +1,36 @@
+# Tomcat 端口
+server:
+      port: 6081
+spring:
+    # 激活配置文件环境 dev|test|prod
+    profiles:
+        active: dev
+    #数据库驱动
+    datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    #开启AOP注解
+    aop:
+      auto: true
+      proxy-target-class: true
+#     http:
+#       converters:
+#         preferred-json-mapper: fastjson
+# Mybatis配置
+mybatis:
+    mapperLocations: classpath:mybatis/**/*Mapper.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
+#excel ftl 模板存储物理路径
+excel:
+  ftlPath: E:\hzx_work_002\idea\work\lms\trunk\lms-web\src\main\webapp\templates\excel
+
+  #短信和验证码接口
+sms:
+  checkCodeUrl: http://192.168.2.11:7080/checkcode/getCheckCode.html
+  verifyUrl: http://192.168.2.11:7080/checkcode/verifyCheckCode.html
+  sendTempUrl: http://192.168.2.11:7080/sms/sendTemp.html
+  sendUrl: http://192.168.2.11:7080/sms/send.html
+  pushAliasUrl: http://192.168.2.11:7080/push/pushAlias.html
+  pushAliasTempUrl: http://192.168.2.11:7080/push/pushAliasTemp.html
+  pushAllUrl: http://192.168.2.11:7080/push/pushAll.html

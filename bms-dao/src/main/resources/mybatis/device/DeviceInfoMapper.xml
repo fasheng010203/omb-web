@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.onemile.bms.mapper.device.DeviceInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.onemile.bms.entity.device.DeviceInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="online" property="online" jdbcType="VARCHAR" />
+    <result column="devdesc" property="devdesc" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="protocol" property="protocol" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="auth_info" property="authInfo" jdbcType="VARCHAR" />
+    <result column="sbprivate" property="sbprivate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="dev_id" property="devId" jdbcType="VARCHAR" />
+    <result column="qrurl" property="qrurl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="isfix" property="isfix" jdbcType="VARCHAR" />
+    <result column="islost" property="islost" jdbcType="VARCHAR" />
+    <result column="isinstock" property="isinstock" jdbcType="VARCHAR" />
+    <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="create_oper_id" property="createOperId" jdbcType="BIGINT" />
+    <result column="create_oper_name" property="createOperName" jdbcType="VARCHAR" />
+    <result column="update_oper_id" property="updateOperId" jdbcType="BIGINT" />
+    <result column="update_oper_name" property="updateOperName" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <resultMap id="NewBaseResultMap" type="com.onemile.bms.pojo.dto.device.DeviceInfoDTO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="online" property="online" jdbcType="VARCHAR" />
+    <result column="devdesc" property="devdesc" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="protocol" property="protocol" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="auth_info" property="authInfo" jdbcType="VARCHAR" />
+    <result column="sbprivate" property="sbprivate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="dev_id" property="devId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="qrurl" property="qrurl" jdbcType="VARCHAR" />
+    <result column="isfix" property="isfix" jdbcType="VARCHAR" />
+    <result column="islost" property="islost" jdbcType="VARCHAR" />
+    <result column="isinstock" property="isinstock" jdbcType="VARCHAR" />
+    <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="create_oper_id" property="createOperId" jdbcType="BIGINT" />
+    <result column="create_oper_name" property="createOperName" jdbcType="VARCHAR" />
+    <result column="update_oper_id" property="updateOperId" jdbcType="BIGINT" />
+    <result column="update_oper_name" property="updateOperName" jdbcType="VARCHAR" />
+    <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="temp" property="temp" jdbcType="VARCHAR" />
+    <result column="humi" property="humi" jdbcType="VARCHAR" />
+    <result column="vbat" property="vbat" jdbcType="VARCHAR" />
+    <result column="obsA" property="obsa" jdbcType="VARCHAR" />
+    <result column="obsB" property="obsb" jdbcType="VARCHAR" />
+    <result column="gate" property="gate" jdbcType="VARCHAR" />
+    <result column="at" property="at" jdbcType="VARCHAR" />
+    <result column="batcnt" property="batcnt" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="lon" property="lon" jdbcType="VARCHAR" />
+
+  </resultMap>
+
+
+
+
+  <sql id="Base_Column_List" >
+    id, title, online, devdesc, tags, protocol, location, auth_info, sbprivate, create_time, 
+    dev_id, qrurl, status, isfix, islost, isinstock, provinceid, cityid, create_oper_id, 
+    create_oper_name, update_oper_id, update_oper_name, gmt_create, gmt_modified
+  </sql>
+
+  <sql id="Base_Column_List_new" >
+    id, title, online, devdesc, tags, protocol, location, auth_info authinfo, sbprivate, create_time createtime,
+    dev_id devid, qrurl, status, isfix, islost, isinstock, provinceid, cityid, create_oper_id,
+    create_oper_name, update_oper_id, update_oper_name, gmt_create gmtcreate, gmt_modified gmtmodified
+  </sql>
+
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from device_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from device_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+    insert into device_info ( title, online, 
+      devdesc, tags, protocol, 
+      location, auth_info, sbprivate, 
+      create_time, dev_id, qrurl, 
+      status, isfix, islost, 
+      isinstock, provinceid, cityid, 
+      create_oper_id, create_oper_name, update_oper_id, 
+      update_oper_name, gmt_create, gmt_modified
+      )
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{online,jdbcType=VARCHAR}, 
+      #{devdesc,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{protocol,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR}, #{authInfo,jdbcType=VARCHAR}, #{sbprivate,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{devId,jdbcType=VARCHAR}, #{qrurl,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{isfix,jdbcType=VARCHAR}, #{islost,jdbcType=VARCHAR}, 
+      #{isinstock,jdbcType=VARCHAR}, #{provinceid,jdbcType=VARCHAR}, #{cityid,jdbcType=VARCHAR}, 
+      #{createOperId,jdbcType=BIGINT}, #{createOperName,jdbcType=VARCHAR}, #{updateOperId,jdbcType=BIGINT}, 
+      #{updateOperName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+      );
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <insert id="insertSelective" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+    insert into device_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="online != null" >
+        online,
+      </if>
+      <if test="devdesc != null" >
+        devdesc,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>
+      <if test="protocol != null" >
+        protocol,
+      </if>
+      <if test="location != null" >
+        location,
+      </if>
+      <if test="authInfo != null" >
+        auth_info,
+      </if>
+      <if test="sbprivate != null" >
+        sbprivate,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="devId != null" >
+        dev_id,
+      </if>
+      <if test="qrurl != null" >
+        qrurl,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isfix != null" >
+        isfix,
+      </if>
+      <if test="islost != null" >
+        islost,
+      </if>
+      <if test="isinstock != null" >
+        isinstock,
+      </if>
+      <if test="provinceid != null" >
+        provinceid,
+      </if>
+      <if test="cityid != null" >
+        cityid,
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id,
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name,
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id,
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name,
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="online != null" >
+        #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="devdesc != null" >
+        #{devdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="protocol != null" >
+        #{protocol,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="authInfo != null" >
+        #{authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sbprivate != null" >
+        #{sbprivate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrurl != null" >
+        #{qrurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isfix != null" >
+        #{isfix,jdbcType=VARCHAR},
+      </if>
+      <if test="islost != null" >
+        #{islost,jdbcType=VARCHAR},
+      </if>
+      <if test="isinstock != null" >
+        #{isinstock,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        #{provinceid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperId != null" >
+        #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    
+		<selectKey resultType="long" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+    update device_info
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="online != null" >
+        online = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="devdesc != null" >
+        devdesc = #{devdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="protocol != null" >
+        protocol = #{protocol,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="authInfo != null" >
+        auth_info = #{authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sbprivate != null" >
+        sbprivate = #{sbprivate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="devId != null" >
+        dev_id = #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="qrurl != null" >
+        qrurl = #{qrurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isfix != null" >
+        isfix = #{isfix,jdbcType=VARCHAR},
+      </if>
+      <if test="islost != null" >
+        islost = #{islost,jdbcType=VARCHAR},
+      </if>
+      <if test="isinstock != null" >
+        isinstock = #{isinstock,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        provinceid = #{provinceid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id = #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+    update device_info
+    set title = #{title,jdbcType=VARCHAR},
+      online = #{online,jdbcType=VARCHAR},
+      devdesc = #{devdesc,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      protocol = #{protocol,jdbcType=VARCHAR},
+      location = #{location,jdbcType=VARCHAR},
+      auth_info = #{authInfo,jdbcType=VARCHAR},
+      sbprivate = #{sbprivate,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      dev_id = #{devId,jdbcType=VARCHAR},
+      qrurl = #{qrurl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      isfix = #{isfix,jdbcType=VARCHAR},
+      islost = #{islost,jdbcType=VARCHAR},
+      isinstock = #{isinstock,jdbcType=VARCHAR},
+      provinceid = #{provinceid,jdbcType=VARCHAR},
+      cityid = #{cityid,jdbcType=VARCHAR},
+      create_oper_id = #{createOperId,jdbcType=BIGINT},
+      create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+
+  <update id="updateDeviceByDevId" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+
+    update device_info
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="online != null" >
+        online = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="devdesc != null" >
+        devdesc = #{devdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="protocol != null" >
+        protocol = #{protocol,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="authInfo != null" >
+        auth_info = #{authInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="sbprivate != null" >
+        sbprivate = #{sbprivate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qrurl != null" >
+        qrurl = #{qrurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isfix != null" >
+        isfix = #{isfix,jdbcType=VARCHAR},
+      </if>
+      <if test="islost != null" >
+        islost = #{islost,jdbcType=VARCHAR},
+      </if>
+      <if test="isinstock != null" >
+        isinstock = #{isinstock,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        provinceid = #{provinceid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id = #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where  dev_id = #{devId,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <update id="updateDeviceByAuthinfo" parameterType="com.onemile.bms.entity.device.DeviceInfo" >
+
+    update device_info
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="online != null" >
+        online = #{online,jdbcType=VARCHAR},
+      </if>
+      <if test="devdesc != null" >
+        devdesc = #{devdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="protocol != null" >
+        protocol = #{protocol,jdbcType=VARCHAR},
+      </if>
+      <if test="location != null" >
+        location = #{location,jdbcType=VARCHAR},
+      </if>
+      <if test="sbprivate != null" >
+        sbprivate = #{sbprivate,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="qrurl != null" >
+        qrurl = #{qrurl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isfix != null" >
+        isfix = #{isfix,jdbcType=VARCHAR},
+      </if>
+      <if test="islost != null" >
+        islost = #{islost,jdbcType=VARCHAR},
+      </if>
+      <if test="isinstock != null" >
+        isinstock = #{isinstock,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        provinceid = #{provinceid,jdbcType=VARCHAR},
+      </if>
+      <if test="cityid != null" >
+        cityid = #{cityid,jdbcType=VARCHAR},
+      </if>
+      <if test="createOperId != null" >
+        create_oper_id = #{createOperId,jdbcType=BIGINT},
+      </if>
+      <if test="createOperName != null" >
+        create_oper_name = #{createOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateOperId != null" >
+        update_oper_id = #{updateOperId,jdbcType=BIGINT},
+      </if>
+      <if test="updateOperName != null" >
+        update_oper_name = #{updateOperName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null" >
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where  auth_info = #{authInfo,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+
+
+
+
+
+  <select id="listPage" resultMap="NewBaseResultMap">
+    SELECT
+    d.id,
+    d.title,
+    d. ONLINE,
+    d.devdesc,
+    d.tags,
+    d.protocol,
+    d.location,
+    d.auth_info,
+    d.sbprivate,
+    d.create_time,
+    d.dev_id,
+    d. STATUS,
+    d.qrurl,
+    d.islost,
+    d.isfix,
+    d.isinstock,
+    d.create_oper_id,
+    d.create_oper_name,
+    d.update_oper_id,
+    d.update_oper_name,
+    d.provinceid,
+    d.cityid,
+    b.mbat,
+    b.sbat,
+    b.temp,
+    b.humi,
+    b.vbat,
+    b.obsA,
+    b.obsB,
+    b.gate,
+    b. AT,
+    d.gmt_create,
+    d.gmt_modified,
+    c.batcnt batcnt,
+    l.lat,
+    l.lon
+    FROM
+    device_info d
+    LEFT JOIN (
+    SELECT
+    dev_id,
+    temp,
+    humi,
+    vbat,
+    mbat,
+    sbat,
+    obsA,
+    obsB,
+    gate,
+    AT
+    FROM
+    (
+    SELECT
+    dev_id,
+    temp,
+    humi,
+    mbat,
+    sbat,
+    vbat,
+    obsA,
+    obsB,
+    gate,
+    AT
+    FROM
+    sb_status t
+    ORDER BY
+    AT DESC
+    ) a
+    GROUP BY
+    a.dev_id
+    ) b ON d.dev_id = b.dev_id
+    LEFT JOIN
+    (SELECT COUNT(t.dev_id) batcnt,t.dev_id  from sb_event t where t.evt='MainBatCheckOut' GROUP BY t.dev_id) c
+    on d.dev_id=c.dev_id
+    LEFT JOIN
+    (SELECT dev_id,lat,lon,at from  (SELECT * from sb_loc order by at desc) t GROUP BY  t.dev_id) l
+    on d.dev_id=l.dev_id
+
+
+    <where>
+
+      <if test="title != null and title!=''" >
+        and d.title =#{title}
+      </if>
+
+      <if test="devid != null and devid!=''" >
+        and d.dev_id =#{devid}
+      </if>
+
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(d.gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(d.gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+
+      <if test="cityid != null and cityid!=''" >
+        and <![CDATA[d.cityid in ( #{cityid}  ) ]]>
+      </if>
+
+
+    </where>
+    order by 	d. ONLINE DESC,d.devdesc DESC  ,d.gmt_create desc
+  </select>
+
+  <select id="findByAutoInfo" resultType="com.onemile.bms.entity.device.DeviceInfo" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List_new" />
+    FROM
+    device_info
+    <where>
+      and auth_info =#{authInfo,jdbcType=VARCHAR}
+    </where>
+  </select>
+
+
+  <select id="getDeviceCount" resultType="java.lang.Long"  >
+    select count(id) from device_info
+  </select>
+  <select id="getDeviceFixCount" resultType="java.lang.Long"  >
+    select count(id) from device_info t where t.isfix='1'
+  </select>
+
+
+  <select id="listDeviceInfo" resultMap="NewBaseResultMap">
+    SELECT
+    d.id,
+    d.title,
+    d. ONLINE,
+    d.devdesc,
+    d.tags,
+    d.protocol,
+    d.location,
+    d.auth_info,
+    d.sbprivate,
+    d.create_time,
+    d.dev_id,
+    d. STATUS,
+    d.qrurl,
+    d.islost,
+    d.isfix,
+    d.isinstock,
+    d.create_oper_id,
+    d.create_oper_name,
+    d.update_oper_id,
+    d.update_oper_name,
+    d.provinceid,
+    d.cityid,
+    b.temp,
+    b.humi,
+    b.mbat,
+    b.sbat,
+    b.vbat,
+    b.obsA,
+    b.obsB,
+    b.gate,
+    b. AT,
+    d.gmt_create,
+    d.gmt_modified,
+    c.evt evt,
+    l.lat,
+    l.lon
+
+    FROM
+    device_info d
+    LEFT JOIN (
+    SELECT
+    dev_id,
+    temp,
+    humi,
+    mbat,
+    sbat,
+    vbat,
+    obsA,
+    obsB,
+    gate,
+    AT
+    FROM
+    (
+    SELECT
+    dev_id,
+    temp,
+    humi,
+    mbat,
+    sbat,
+    vbat,
+    obsA,
+    obsB,
+    gate,
+    AT
+    FROM
+    sb_status t
+    ORDER BY
+    AT DESC
+    ) a
+    GROUP BY
+    a.dev_id
+    ) b ON d.dev_id = b.dev_id
+
+    LEFT JOIN
+    (SELECT COUNT(t.dev_id) batcnt,t.dev_id, t.evt  from sb_event t  GROUP BY t.dev_id) c
+    on d.dev_id=c.dev_id
+
+    LEFT JOIN
+    (SELECT dev_id,lat,lon,at from  (SELECT * from sb_loc order by at desc) t GROUP BY  t.dev_id) l
+    on d.dev_id=l.dev_id
+
+
+    <where>
+      <if test="title != null and title!=''" >
+        and d.title =#{title}
+      </if>
+
+      <if test="devid != null and devid!=''" >
+        and d.dev_id =#{devid}
+      </if>
+
+      <if test="beginDate != null and beginDate!=''">
+        and <![CDATA[ left(d.gmt_create,10) >=  #{beginDate}  ]]>
+      </if>
+      <if test="endDate != null and endDate!=''">
+        and <![CDATA[ left(d.gmt_create,10) <=  #{endDate}  ]]>
+      </if>
+
+      <if test="cityid != null and cityid!=''" >
+        and d.cityid in ('1301')
+      </if>
+
+    </where>
+    order by d. ONLINE DESC,d.devdesc DESC ,d.gmt_create  desc
+  </select>
+
+
+
+
+
+
+
+
+</mapper>
